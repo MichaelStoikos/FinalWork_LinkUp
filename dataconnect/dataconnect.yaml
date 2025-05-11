@@ -1,0 +1,12 @@
+specVersion: "v1"
+serviceId: "finalworklinkup"
+location: "us-central1"
+schema:
+  source: "./schema"
+  datasource:
+    postgresql:
+      database: "fdcdb"
+      cloudSql:
+        instanceId: "finalworklinkup-fdc"
+      # schemaValidation: "COMPATIBLE"
+connectorDirs: ["./connector"]
