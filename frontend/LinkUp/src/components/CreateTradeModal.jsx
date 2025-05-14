@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import './CreateTradeModal.css';
+import '../style/CreateTradeModal.css';
 
 const DIFFICULTY_OPTIONS = [
   'Beginner-friendly',

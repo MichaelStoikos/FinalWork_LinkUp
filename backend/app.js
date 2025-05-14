@@ -13,13 +13,8 @@ app.get("/", (req, res) => {
 // Trades endpoints
 app.get("/api/trades", async (req, res) => {
   try {
-    console.log("Attempting to fetch trades from Firebase...");
     const tradesRef = db.collection("trades");
-    console.log("Collection reference created");
-    
     const snapshot = await tradesRef.get();
-    console.log("Snapshot received, number of documents:", snapshot.size);
-    
     const trades = [];
     snapshot.forEach(doc => {
       trades.push({
@@ -27,12 +22,9 @@ app.get("/api/trades", async (req, res) => {
         ...doc.data()
       });
     });
-    
-    console.log("Successfully processed", trades.length, "documents");
     res.json(trades);
   } catch (error) {
-    console.error("Detailed error in /api/trades:", error);
-    console.error("Error stack:", error.stack);
+    console.error("Error fetching trades:", error);
     res.status(500).json({ 
       error: "Failed to fetch trades",
       details: error.message 
@@ -67,36 +59,6 @@ app.post("/api/trades", async (req, res) => {
     res.status(500).json({
       error: "Failed to create trade",
       details: error.message
-    });
-  }
-});
-
-// New endpoint to fetch tests
-app.get("/api/tests", async (req, res) => {
-  try {
-    console.log("Attempting to fetch tests from Firebase...");
-    const testsRef = db.collection("tests");
-    console.log("Collection reference created");
-    
-    const snapshot = await testsRef.get();
-    console.log("Snapshot received, number of documents:", snapshot.size);
-    
-    const tests = [];
-    snapshot.forEach(doc => {
-      tests.push({
-        id: doc.id,
-        ...doc.data()
-      });
-    });
-    
-    console.log("Successfully processed", tests.length, "documents");
-    res.json(tests);
-  } catch (error) {
-    console.error("Detailed error in /api/tests:", error);
-    console.error("Error stack:", error.stack);
-    res.status(500).json({ 
-      error: "Failed to fetch tests",
-      details: error.message 
     });
   }
 });
