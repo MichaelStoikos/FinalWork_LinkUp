@@ -1,4 +1,7 @@
 import { useState } from 'react';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from '../firebase/config';
+import LoginRequired from './LoginRequired';
 import '../style/CreateTradeModal.css';
 
 const DIFFICULTY_OPTIONS = [
@@ -17,7 +20,8 @@ const SERVICE_OPTIONS = [
   'Other'
 ];
 
-function CreateTradeModal({ isOpen, onClose, onSubmit }) {
+function CreateTradeModal({ isOpen, onClose, onSubmit, onLoginClick, userProfile }) {
+  const [user] = useAuthState(auth);
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -89,7 +93,12 @@ function CreateTradeModal({ isOpen, onClose, onSubmit }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setUploading(true);
-    onSubmit(formData);
+    const tradeData = {
+      ...formData,
+      creatorNickname: userProfile?.nickname || userProfile?.displayName || userProfile?.email || '',
+      createdAt: new Date().toISOString(),
+    };
+    onSubmit(tradeData);
     setUploading(false);
     setFormData({
       name: '',
@@ -104,6 +113,17 @@ function CreateTradeModal({ isOpen, onClose, onSubmit }) {
   };
 
   if (!isOpen) return null;
+
+  if (!user) {
+    return (
+      <div className="modal-overlay">
+        <div className="modal-content">
+          <button className="close-button" onClick={onClose}>&times;</button>
+          <LoginRequired onLoginClick={onLoginClick} />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="modal-overlay">

@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react'
 import CreateTradeModal from '../components/CreateTradeModal'
+import AuthModal from '../components/AuthModal'
+import { auth, db } from '../firebase/config'
+import { doc, getDoc } from 'firebase/firestore'
 import './Trades.css'
 
 function Trades() {
@@ -7,9 +10,26 @@ function Trades() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [userProfile, setUserProfile] = useState(null);
 
   useEffect(() => {
     fetchTrades();
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        const docRef = doc(db, 'users', user.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          setUserProfile(docSnap.data());
+        }
+      } else {
+        setUserProfile(null);
+      }
+    });
+    return () => unsubscribe();
   }, []);
 
   const fetchTrades = async () => {
@@ -89,6 +109,11 @@ function Trades() {
               {trade.image && (
                 <img src={trade.image} alt={trade.name} className="trade-image" />
               )}
+              {trade.creatorNickname && (
+                <div className="trade-creator">
+                  <span>By: {trade.creatorNickname}</span>
+                </div>
+              )}
               <div className="trade-info">
                 <div className="trade-avatar-row">
                   <span className="trade-avatar">
@@ -115,7 +140,13 @@ function Trades() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSubmit={handleCreateTrade}
+        onLoginClick={() => {
+          setIsAuthModalOpen(true);
+          setIsModalOpen(false);
+        }}
+        userProfile={userProfile}
       />
+      <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
     </div>
   );
 }

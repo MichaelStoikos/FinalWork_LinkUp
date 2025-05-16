@@ -103,7 +103,7 @@ function Profile() {
                 // Update local state
                 setProfile(prev => ({
                     ...prev,
-                    photoBase64: base64String
+                    photoBase64: base64String || prev.photoBase64
                 }));
             };
             reader.readAsDataURL(file);
@@ -138,9 +138,14 @@ function Profile() {
         try {
             const userRef = doc(db, 'users', user.uid);
             await updateDoc(userRef, formData);
-            setProfile(formData);
+            setProfile(prev => ({
+                ...prev,
+                ...formData,
+                photoBase64: prev.photoBase64 // preserve the image!
+            }));
             setIsEditing(false);
             setError(null);
+            window.location.reload(); // Force refresh to update nav profile picture
         } catch (err) {
             setError('Error updating profile: ' + err.message);
         }
@@ -171,7 +176,11 @@ function Profile() {
                     onClick={handleImageClick}
                 >
                     <img 
-                        src={profile?.photoBase64 || user.photoURL || '/User.png'} 
+                        src={
+                            (profile?.photoBase64 && profile.photoBase64 !== '') 
+                                ? profile.photoBase64 
+                                : (user.photoURL || '/User.png')
+                        }
                         alt="Profile" 
                         className="profile-picture"
                     />
