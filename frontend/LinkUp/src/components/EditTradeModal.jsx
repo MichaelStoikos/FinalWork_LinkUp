@@ -1,7 +1,6 @@
-import { useState } from 'react';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth } from '../firebase/config';
-import LoginRequired from './LoginRequired';
+import React, { useState } from 'react';
+import { db } from '../firebase/config';
+import { doc, updateDoc } from 'firebase/firestore';
 import '../style/CreateTradeModal.css';
 
 const DIFFICULTY_OPTIONS = [
@@ -20,9 +19,8 @@ const SERVICE_OPTIONS = [
   'Other'
 ];
 
-function CreateTradeModal({ isOpen, onClose, onSubmit, onLoginClick, userProfile }) {
-  const [user] = useAuthState(auth);
-  const [formData, setFormData] = useState({
+function EditTradeModal({ isOpen, onClose, trade, onSubmit }) {
+  const [formData, setFormData] = useState(trade || {
     name: '',
     description: '',
     difficulty: '',
@@ -32,8 +30,22 @@ function CreateTradeModal({ isOpen, onClose, onSubmit, onLoginClick, userProfile
     image: ''
   });
   const [tagInput, setTagInput] = useState('');
-  const [imagePreview, setImagePreview] = useState('');
+  const [imagePreview, setImagePreview] = useState(trade?.image || '');
   const [uploading, setUploading] = useState(false);
+
+  // Update form when trade changes
+  React.useEffect(() => {
+    setFormData(trade || {
+      name: '',
+      description: '',
+      difficulty: '',
+      serviceGiven: '',
+      serviceWanted: '',
+      tags: [],
+      image: ''
+    });
+    setImagePreview(trade?.image || '');
+  }, [trade]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -93,44 +105,25 @@ function CreateTradeModal({ isOpen, onClose, onSubmit, onLoginClick, userProfile
   const handleSubmit = async (e) => {
     e.preventDefault();
     setUploading(true);
-    const tradeData = {
-      ...formData,
-      creatorUid: user?.uid,
-      creatorNickname: userProfile?.nickname || userProfile?.displayName || userProfile?.email || '',
-      createdAt: new Date().toISOString(),
-    };
-    onSubmit(tradeData);
-    setUploading(false);
-    setFormData({
-      name: '',
-      description: '',
-      difficulty: '',
-      serviceGiven: '',
-      serviceWanted: '',
-      tags: [],
-      image: ''
-    });
-    setImagePreview('');
+    try {
+      const tradeRef = doc(db, 'trades', trade.id);
+      await updateDoc(tradeRef, formData);
+      onSubmit({ ...trade, ...formData });
+      onClose();
+    } catch (err) {
+      alert('Error updating trade: ' + err.message);
+    } finally {
+      setUploading(false);
+    }
   };
 
   if (!isOpen) return null;
-
-  if (!user) {
-    return (
-      <div className="modal-overlay">
-        <div className="modal-content">
-          <button className="close-button" onClick={onClose}>&times;</button>
-          <LoginRequired onLoginClick={onLoginClick} />
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="modal-overlay">
       <div className="modal-content">
         <div className="modal-header">
-          <h2>Create New Trade</h2>
+          <h2>Edit Trade</h2>
           <button className="close-button" onClick={onClose}>&times;</button>
         </div>
         <form onSubmit={handleSubmit}>
@@ -227,9 +220,9 @@ function CreateTradeModal({ isOpen, onClose, onSubmit, onLoginClick, userProfile
                 accept="image/*"
                 onChange={handleFileChange}
                 style={{ display: 'none' }}
-                id="fileInput"
+                id="fileInputEdit"
               />
-              <label htmlFor="fileInput" className="file-drop-label">
+              <label htmlFor="fileInputEdit" className="file-drop-label">
                 {imagePreview ? (
                   <img src={imagePreview} alt="Preview" className="image-preview" />
                 ) : (
@@ -257,7 +250,7 @@ function CreateTradeModal({ isOpen, onClose, onSubmit, onLoginClick, userProfile
               Cancel
             </button>
             <button type="submit" className="submit-button" disabled={uploading}>
-              {uploading ? 'Uploading...' : 'Submit'}
+              {uploading ? 'Saving...' : 'Save Changes'}
             </button>
           </div>
         </form>
@@ -266,4 +259,4 @@ function CreateTradeModal({ isOpen, onClose, onSubmit, onLoginClick, userProfile
   );
 }
 
-export default CreateTradeModal; 
+export default EditTradeModal; 

@@ -9,6 +9,7 @@ function Navigation() {
     const [user, setUser] = useState(null);
     const [profilePic, setProfilePic] = useState(null);
     const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -44,6 +45,14 @@ function Navigation() {
         navigate('/profile');
     };
 
+    const handleMyTradesClick = () => {
+        navigate('/my-trades');
+    };
+
+    const toggleDropdown = () => {
+        setIsDropdownOpen(!isDropdownOpen);
+    };
+
     return (
         <nav className="main-nav">
             <div className="nav-links">
@@ -55,8 +64,8 @@ function Navigation() {
                     <div className="user-menu">
                         <button 
                             className="profile-button"
-                            onClick={handleProfileClick}
-                            title="View Profile"
+                            onClick={toggleDropdown}
+                            title="Account Menu"
                         >
                             <img 
                                 src={profilePic} 
@@ -64,6 +73,13 @@ function Navigation() {
                                 className="profile-picture"
                             />
                         </button>
+                        {isDropdownOpen && (
+                            <div style={{ position: 'absolute', top: '100%', right: 0, background: 'white', boxShadow: '0 2px 5px rgba(0,0,0,0.2)', zIndex: 100, borderRadius: '4px', padding: '8px 0' }}>
+                                <button onClick={handleProfileClick} style={{ display: 'block', width: '100%', padding: '8px 16px', textAlign: 'left', border: 'none', background: 'transparent', cursor: 'pointer', color: 'black' }}>Account Details</button>
+                                <button onClick={handleMyTradesClick} style={{ display: 'block', width: '100%', padding: '8px 16px', textAlign: 'left', border: 'none', background: 'transparent', cursor: 'pointer', color: 'black' }}>My Trades</button>
+                                <button onClick={handleSignOut} style={{ display: 'block', width: '100%', padding: '8px 16px', textAlign: 'left', border: 'none', background: 'transparent', cursor: 'pointer', color: 'black' }}>Sign Out</button>
+                            </div>
+                        )}
                     </div>
                 ) : (
                     <button 

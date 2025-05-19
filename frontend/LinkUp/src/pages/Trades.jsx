@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import CreateTradeModal from '../components/CreateTradeModal'
 import AuthModal from '../components/AuthModal'
 import { auth, db } from '../firebase/config'
 import { doc, getDoc } from 'firebase/firestore'
-import './Trades.css'
+import '../style/Trades.css'
 
 function Trades() {
+  const navigate = useNavigate();
   const [trades, setTrades] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -74,6 +76,10 @@ function Trades() {
     }
   };
 
+  const handleTradeClick = (tradeId) => {
+    navigate(`/trade/${tradeId}`);
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -105,7 +111,12 @@ function Trades() {
           <p>No trades found. Create your first trade!</p>
         ) : (
           trades.map((trade) => (
-            <div key={trade._id} className="trade-card custom-trade-card">
+            <div 
+              key={trade._id} 
+              className="trade-card custom-trade-card"
+              onClick={() => handleTradeClick(trade._id)}
+              style={{ cursor: 'pointer' }}
+            >
               {trade.image && (
                 <img src={trade.image} alt={trade.name} className="trade-image" />
               )}
@@ -136,19 +147,21 @@ function Trades() {
         )}
       </div>
 
-      <CreateTradeModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSubmit={handleCreateTrade}
-        onLoginClick={() => {
-          setIsAuthModalOpen(true);
-          setIsModalOpen(false);
-        }}
-        userProfile={userProfile}
+      {isModalOpen && (
+        <CreateTradeModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onSubmit={handleCreateTrade}
+          userProfile={userProfile}
+        />
+      )}
+
+      <AuthModal 
+        isOpen={isAuthModalOpen} 
+        onClose={() => setIsAuthModalOpen(false)} 
       />
-      <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
     </div>
   );
 }
 
-export default Trades
+export default Trades;
