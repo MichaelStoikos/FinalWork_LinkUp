@@ -48,6 +48,8 @@ app.post("/api/trades", async (req, res) => {
     }
     // Add timestamp
     tradeData.createdAt = new Date().toISOString();
+    // Set default status
+    tradeData.status = 'open';
     // Add to Firestore
     const docRef = await db.collection("trades").add(tradeData);
     res.status(201).json({

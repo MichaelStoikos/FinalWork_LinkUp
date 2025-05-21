@@ -58,6 +58,7 @@ function Navigation() {
             <div className="nav-links">
                 <Link to="/">Home</Link>
                 <Link to="/Trades">Trades</Link>
+                {user && <Link to="/messages">Messages</Link>}
             </div>
             <div className="auth-section">
                 {user ? (

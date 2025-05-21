@@ -7,6 +7,8 @@ import Profile from './pages/Profile.jsx';
 import MyTrades from './pages/MyTrades';
 import TradeDetails from './pages/TradeDetails';
 import AccountDetails from './pages/AccountDetails';
+import Messages from './pages/Messages';
+import ChatList from './pages/ChatList';
 import './style/index.css';
 
 function App() {
@@ -20,6 +22,8 @@ function App() {
         <Route path="/my-trades" element={<MyTrades />} />
         <Route path="/trade/:tradeId" element={<TradeDetails />} />
         <Route path="/account/:userId" element={<AccountDetails />} />
+        <Route path="/messages" element={<ChatList />} />
+        <Route path="/messages/:chatId" element={<Messages />} />
       </Routes>
     </>
   );

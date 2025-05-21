@@ -140,6 +140,54 @@
   color: white;
 }
 
+.creator-link {
+  background: none;
+  border: none;
+  color: #646cff;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+  transition: color 0.2s;
+}
+
+.creator-link:hover {
+  color: #535bf2;
+}
+
+.collaboration-section {
+  text-align: center;
+}
+
+.request-collaboration-btn {
+  background: #646cff;
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 4px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 100%;
+  max-width: 300px;
+}
+
+.request-collaboration-btn:hover:not(:disabled) {
+  background: #535bf2;
+  transform: translateY(-2px);
+}
+
+.request-collaboration-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.request-status {
+  color: #4caf50;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
 @media (prefers-color-scheme: dark) {
   .trade-details-content {
     background: #1a1a1a;
@@ -172,6 +220,10 @@
 
   .creator-bio {
     color: #ccc;
+  }
+
+  .request-status {
+    color: #81c784;
   }
 }
 

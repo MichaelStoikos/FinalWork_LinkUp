@@ -43,7 +43,8 @@ function Trades() {
         throw new Error(errorData.details || 'Failed to fetch trades');
       }
       const data = await response.json();
-      setTrades(data);
+      // Only show trades with status 'open'
+      setTrades(data.filter(trade => trade.status === 'open'));
     } catch (error) {
       console.error("Error fetching trades:", error);
       setError(error.message);
