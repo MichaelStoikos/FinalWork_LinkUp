@@ -6,7 +6,6 @@ import { Figma } from 'lucide-react';
 import { Copyright } from 'lucide-react';
 import { Box } from 'lucide-react';
 import { TabletSmartphone } from 'lucide-react';
-import Wave from '../assets/wave-ezgif.com-optimize.gif';
 
 function Home() {
     const navigate = useNavigate();
@@ -14,7 +13,7 @@ function Home() {
     return (
         <>
         <div className="box">
-            <img src={Wave} type="image/gif" alt="Wave" />
+        <img src="https://firebasestorage.googleapis.com/v0/b/linkup-c14d5.firebasestorage.app/o/wave.gif?alt=media&token=8765c07c-56e9-4398-b862-0d57f3435759" alt="My GIF" />
         </div>
         <div className="home-container">            
             <div className="home-content">
