@@ -28,13 +28,21 @@ h1 {
   font-size: 7rem;
 }
 
+h2 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 2.5rem;
+}
+
 h3 {
   font-family: 'Poppins', sans-serif;
   font-size: 1.5rem;
 }
 
-body {
-  
+h4 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.25rem;
+  padding: 0;
+  margin: 0;
 }
 
 button {
@@ -92,6 +100,110 @@ button {
   transition: background 0s;
 }
 
+.ButtonCustom2 {
+  --color: #5D00FF;
+  font-family: inherit;
+  display: inline-block;
+  background-color: #7B68EE;
+  margin-top: 1.2rem;
+  width: 8rem;
+  height: 3rem;
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  border: none;
+  transition: color 0.5s;
+  z-index: 1;
+  font-size: 1.3rem;
+  border-radius: 6px;
+  font-weight: 700;
+  color: white;
+}
+
+.ButtonCustom2:before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  background: var(--color);
+  height: 150px;
+  width: 300px;
+  border-radius: 50%;
+}
+
+.ButtonCustom2:hover {
+  color: #fff;
+}
+
+.ButtonCustom2:before {
+  top: 100%;
+  left: 100%;
+  transition: all 0.7s;
+}
+
+.ButtonCustom2:hover::before {
+  top: -30px;
+  left: -30px;
+}
+
+.ButtonCustom2:active:before {
+  background: #3a0ca3;
+  transition: background 0s;
+}
+
+.ButtonCustom3 {
+  --color: #5D00FF;
+  font-family: inherit;
+  display: inline-block;
+  background-color: #7B68EE;
+  margin-top: 1.2rem;
+  width: 100%;
+  height: 3rem;
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  border: none;
+  transition: color 0.5s;
+  z-index: 1;
+  font-size: 1.3rem;
+  border-radius: 6px;
+  font-weight: 700;
+  color: white;
+}
+
+.ButtonCustom3:before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  background: var(--color);
+  height: 200px;
+  width: 150%;
+  border-radius: 25%;
+}
+
+.ButtonCustom3:hover {
+  color: #fff;
+}
+
+.ButtonCustom3:before {
+  top: 100%;
+  left: 100%;
+  transition: all 0.7s;
+}
+
+.ButtonCustom3:hover::before {
+  top: -30px;
+  left: -30px;
+}
+
+.ButtonCustom3:active:before {
+  background: #3a0ca3;
+  transition: background 0s;
+}
+
 .skills-section {
   margin-top: 500px;
+}
+
+label {
+  color: red;
 }

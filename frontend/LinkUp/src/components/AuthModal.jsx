@@ -114,7 +114,7 @@ function AuthModal({ isOpen, onClose }) {
                 <form onSubmit={handleEmailAuth}>
                     {!isLogin && (
                         <div className="form-group">
-                            <label htmlFor="nickname">Nickname</label>
+                            <label htmlFor="nickname"><h4>Nickname</h4></label>
                             <input
                                 type="text"
                                 id="nickname"
@@ -127,7 +127,7 @@ function AuthModal({ isOpen, onClose }) {
                     )}
                     
                     <div className="form-group">
-                        <label htmlFor="email">Email</label>
+                        <label htmlFor="email"><h4>Email</h4></label>
                         <input
                             type="email"
                             id="email"
@@ -139,7 +139,7 @@ function AuthModal({ isOpen, onClose }) {
                     </div>
                     
                     <div className="form-group">
-                        <label htmlFor="password">Password</label>
+                        <label htmlFor="password"><h4>Password</h4></label>
                         <input
                             type="password"
                             id="password"
@@ -150,7 +150,7 @@ function AuthModal({ isOpen, onClose }) {
                         />
                     </div>
                     
-                    <button type="submit" className="submit-button">
+                    <button type="submit" className="ButtonCustom3">
                         {isLogin ? 'Login' : 'Create Account'}
                     </button>
                 </form>

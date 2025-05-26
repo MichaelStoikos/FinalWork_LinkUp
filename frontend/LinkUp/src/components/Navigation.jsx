@@ -87,7 +87,7 @@ function Navigation() {
                     </div>
                 ) : (
                     <button 
-                        className="login-button"
+                        className="ButtonCustom2"
                         onClick={() => setIsAuthModalOpen(true)}
                     >
                         Login
