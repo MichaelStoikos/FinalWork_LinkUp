@@ -1,11 +1,12 @@
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Poppins', sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color: black;
+  background-color: white;
+  overflow-x: hidden;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -22,47 +23,75 @@ a:hover {
   color: #535bf2;
 }
 
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+h1 {
+  font-family: 'TT Trailers Trial', sans-serif;
+  font-size: 7rem;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+h3 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.5rem;
+}
+
+body {
+  
 }
 
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: red;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.5rem;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+.ButtonCustom {
+  --color: #5D00FF;
+  font-family: inherit;
+  display: inline-block;
+  background-color: #7B68EE;
+  width: 12rem;
+  height: 4rem;
+  margin-top: 4rem;
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  border: none;
+  transition: color 0.5s;
+  z-index: 1;
+  font-size: 1.5rem;
+  border-radius: 6px;
+  font-weight: 700;
+  color: white;
+}
+
+.ButtonCustom:before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  background: var(--color);
+  height: 150px;
+  width: 300px;
+  border-radius: 50%;
+}
+
+.ButtonCustom:hover {
+  color: #fff;
+}
+
+.ButtonCustom:before {
+  top: 100%;
+  left: 100%;
+  transition: all 0.7s;
+}
+
+.ButtonCustom:hover::before {
+  top: -30px;
+  left: -30px;
+}
+
+.ButtonCustom:active:before {
+  background: #3a0ca3;
+  transition: background 0s;
+}
+
+.skills-section {
+  margin-top: 500px;
 }

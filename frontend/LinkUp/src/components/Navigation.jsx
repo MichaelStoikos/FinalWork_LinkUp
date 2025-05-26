@@ -55,9 +55,12 @@ function Navigation() {
 
     return (
         <nav className="main-nav">
+            <div className="nav-logo">
+                <Link to="/"><img src="./Logo.png" alt="LinkUp Logo" /></Link>
+            </div>
             <div className="nav-links">
                 <Link to="/">Home</Link>
-                <Link to="/Trades">Trades</Link>
+                <Link to="/Trades">Swaps</Link>
                 {user && <Link to="/messages">Messages</Link>}
             </div>
             <div className="auth-section">
@@ -75,10 +78,10 @@ function Navigation() {
                             />
                         </button>
                         {isDropdownOpen && (
-                            <div style={{ position: 'absolute', top: '100%', right: 0, background: 'white', boxShadow: '0 2px 5px rgba(0,0,0,0.2)', zIndex: 100, borderRadius: '4px', padding: '8px 0' }}>
-                                <button onClick={handleProfileClick} style={{ display: 'block', width: '100%', padding: '8px 16px', textAlign: 'left', border: 'none', background: 'transparent', cursor: 'pointer', color: 'black' }}>Account Details</button>
-                                <button onClick={handleMyTradesClick} style={{ display: 'block', width: '100%', padding: '8px 16px', textAlign: 'left', border: 'none', background: 'transparent', cursor: 'pointer', color: 'black' }}>My Trades</button>
-                                <button onClick={handleSignOut} style={{ display: 'block', width: '100%', padding: '8px 16px', textAlign: 'left', border: 'none', background: 'transparent', cursor: 'pointer', color: 'black' }}>Sign Out</button>
+                            <div className="profile-dropdown">
+                                <button onClick={handleProfileClick}>Account Details</button>
+                                <button onClick={handleMyTradesClick} >My Trades</button>
+                                <button onClick={handleSignOut} >Sign Out</button>
                             </div>
                         )}
                     </div>
