@@ -2,7 +2,20 @@
     max-width: 80%;
     margin: 0 auto;
     float: none;
+    overflow-x: hidden;
 }
+
+.box{
+    position: absolute;
+    width: 102%;
+    height: 100%;
+    bottom: -1px;
+    z-index: -1;
+    top: -2px;
+    left: -2px;
+    background: linear-gradient(to bottom, #311073, #13A5D4);
+}
+
 .home-bg {
     position: absolute;
     top: -2px;
@@ -96,4 +109,9 @@
     color: black;
     display: flex;
     justify-content: center;
+}
+
+.tutorial-content button{
+    margin-left: 39.5%;
+    margin-bottom: 5rem;
 }

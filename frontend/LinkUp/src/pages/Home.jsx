@@ -6,14 +6,17 @@ import { Figma } from 'lucide-react';
 import { Copyright } from 'lucide-react';
 import { Box } from 'lucide-react';
 import { TabletSmartphone } from 'lucide-react';
+import Wave from '../assets/wave-ezgif.com-optimize.gif';
 
 function Home() {
     const navigate = useNavigate();
 
     return (
         <>
-        <div className="home-container">
-            <img src="./BackgroundWave.png" alt="Home Background" className="home-bg" />
+        <div className="box">
+            <img src={Wave} type="image/gif" alt="Wave" />
+        </div>
+        <div className="home-container">            
             <div className="home-content">
                 <section className="hero-section">
                     <h1>CONNECT. COLLABORATE. CREATE.</h1>
