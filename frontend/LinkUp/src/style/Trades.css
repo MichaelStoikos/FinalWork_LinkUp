@@ -1,7 +1,24 @@
 .trades-page {
   padding: 2rem;
-  max-width: 1200px;
+  max-width: 80%;
   margin: 0 auto;
+}
+
+.trades-page-bg{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+.trades-title h1{
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 0;
 }
 
 .trades-header {
@@ -9,6 +26,7 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
+  margin-top: 10rem;
 }
 
 .trades-header h1 {
@@ -39,25 +57,42 @@
 
 /* Custom Trade Card Styles */
 .custom-trade-card {
-  background: #ffc72c;
-  border-radius: 22px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 6px 6px 15px rgba(0, 0, 0, 0.13);
   padding: 0 0 1.5rem 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   min-height: 420px;
   overflow: hidden;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.custom-trade-card:hover {
+  box-shadow: 0 8px 32px rgba(60,60,100,0.18);
+  transform: translateY(-4px) scale(1.01);
 }
 
 .trade-image {
   width: 100%;
-  height: 180px;
+  height: 160px;
   object-fit: cover;
-  border-top-left-radius: 22px;
-  border-top-right-radius: 22px;
-  background: #fff;
+  border-top-left-radius: 18px;
+  border-top-right-radius: 18px;
+  background: #f7f7f7;
   margin-bottom: 1rem;
+}
+
+.trade-creator {
+  width: 90%;
+  display: flex;
+  align-items: center;
+  margin-top: -1.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  color: #888;
+  justify-content: flex-start;
 }
 
 .trade-info {
@@ -65,61 +100,69 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  gap: 0.5rem;
 }
 
 .trade-avatar-row {
   display: flex;
   align-items: center;
   margin-bottom: 0.5rem;
+  gap: 0.7rem;
 }
 
 .trade-avatar {
-  width: 38px;
-  height: 38px;
-  background: #fff;
+  width: 44px;
+  height: 44px;
+  background: #eae6fa;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 0.7rem;
-  font-size: 1.5rem;
+  font-size: 1.7rem;
   box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  color: #7b61ff;
+  overflow: hidden;
 }
 
 .trade-name {
-  font-size: 1.15rem;
-  font-weight: 600;
+  font-size: 1.18rem;
+  font-weight: 700;
   color: #222;
 }
 
 .trade-description {
   color: #222;
-  margin-bottom: 0.7rem;
+  margin-bottom: 0.2rem;
   font-size: 1.05rem;
 }
 
 .trade-service {
   color: #222;
-  margin-bottom: 0.7rem;
+  margin-bottom: 0.2rem;
   font-size: 1.08rem;
+}
+
+.trade-service b {
+  font-weight: 700;
 }
 
 .trade-tags {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  margin-top: 0.5rem;
+  margin-top: 0.7rem;
 }
 
 .trade-tag-chip {
-  background: #fff;
-  color: #222;
+  background: #ede7fa;
+  color: #7b61ff;
   border-radius: 16px;
-  padding: 0.25rem 0.9rem;
-  font-size: 0.95rem;
+  padding: 0.25rem 1.1rem;
+  font-size: 0.97rem;
   font-weight: 500;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+  box-shadow: none;
   border: none;
+  letter-spacing: 0.01em;
 }
 
 .error-container {
@@ -135,4 +178,4 @@
 .error-container p {
   margin: 0.5rem 0;
   color: #666;
-} 
+}

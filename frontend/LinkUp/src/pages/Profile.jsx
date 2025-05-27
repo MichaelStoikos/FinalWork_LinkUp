@@ -5,6 +5,7 @@ import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { updateProfile } from 'firebase/auth';
 import '../style/Profile.css';
+import { Github, Linkedin, Dribbble, Globe } from 'lucide-react';
 
 function Profile() {
     const [user, setUser] = useState(null);
@@ -20,6 +21,7 @@ function Profile() {
     const [formData, setFormData] = useState({
         nickname: '',
         bio: '',
+        specialisation: '',
         tags: [],
         availability: [],
         socialLinks: {
@@ -43,6 +45,7 @@ function Profile() {
                         setFormData({
                             nickname: data.nickname || '',
                             bio: data.bio || '',
+                            specialisation: data.specialisation || '',
                             tags: data.tags || [],
                             availability: data.availability || [],
                             socialLinks: data.socialLinks || {
@@ -169,177 +172,137 @@ function Profile() {
     }
 
     return (
+        <>
         <div className="profile-container">
-            <div className="profile-header">
-                <div 
-                    className={`profile-picture-container ${isEditing ? 'editable' : ''}`}
-                    onClick={handleImageClick}
-                >
-                    <img 
-                        src={
-                            (profile?.photoBase64 && profile.photoBase64 !== '') 
-                                ? profile.photoBase64 
-                                : (user.photoURL || '/User.png')
-                        }
-                        alt="Profile" 
-                        className="profile-picture"
+            <img className="profile-bg" src="https://firebasestorage.googleapis.com/v0/b/linkup-c14d5.firebasestorage.app/o/waveBG2.gif?alt=media&token=594e9ca5-3bc6-49c4-8a75-bc782e628545" alt="wave" />
+            <div className="profile-redesign">
+                <div className="profile-center-block">
+                    <div className="profile-avatar-outer" style={{position: 'relative'}}>
+                        <img 
+                            src={
+                                (profile?.photoBase64 && profile.photoBase64 !== '') 
+                                    ? profile.photoBase64 
+                                    : (user.photoURL || '/User.png')
+                            }
+                            alt="Profile" 
+                            className="profile-avatar-img"
+                            onClick={isEditing ? handleImageClick : undefined}
+                            style={{cursor: isEditing ? 'pointer' : 'default'}}
+                        />
+                        {isEditing && (
+                            <div className="profile-picture-overlay" onClick={handleImageClick} style={{cursor: 'pointer'}}>
+                                <span>Change Photo</span>
+                            </div>
+                        )}
+                        {uploadingImage && (
+                            <div className="uploading-overlay">
+                                <span>Uploading...</span>
+                            </div>
+                        )}
+                    </div>
+                    <input
+                        type="file"
+                        ref={fileInputRef}
+                        onChange={handleImageChange}
+                        accept="image/*"
+                        style={{ display: 'none' }}
                     />
-                    {isEditing && (
-                        <div className="profile-picture-overlay">
-                            <span>Change Photo</span>
-                        </div>
-                    )}
-                    {uploadingImage && (
-                        <div className="uploading-overlay">
-                            <span>Uploading...</span>
-                        </div>
-                    )}
-                </div>
-                <input
-                    type="file"
-                    ref={fileInputRef}
-                    onChange={handleImageChange}
-                    accept="image/*"
-                    style={{ display: 'none' }}
-                />
-                <h1>{user.displayName || user.email}</h1>
-                {!isEditing && (
-                    <button 
-                        className="edit-button"
-                        onClick={() => setIsEditing(true)}
-                    >
-                        Edit Profile
-                    </button>
-                )}
-            </div>
-
-            {isEditing ? (
-                <form onSubmit={handleSubmit} className="profile-form">
-                    <div className="form-group">
-                        <label htmlFor="nickname">Nickname</label>
-                        <input
-                            type="text"
-                            id="nickname"
-                            name="nickname"
-                            value={formData.nickname}
-                            onChange={handleInputChange}
-                            placeholder="Your nickname"
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="bio">Bio</label>
-                        <textarea
-                            id="bio"
-                            name="bio"
-                            value={formData.bio}
-                            onChange={handleInputChange}
-                            placeholder="Tell us about yourself"
-                            rows="4"
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label>Social Links</label>
-                        <input
-                            type="url"
-                            name="social.github"
-                            value={formData.socialLinks.github}
-                            onChange={handleInputChange}
-                            placeholder="GitHub URL"
-                        />
-                        <input
-                            type="url"
-                            name="social.linkedin"
-                            value={formData.socialLinks.linkedin}
-                            onChange={handleInputChange}
-                            placeholder="LinkedIn URL"
-                        />
-                        <input
-                            type="url"
-                            name="social.behance"
-                            value={formData.socialLinks.behance}
-                            onChange={handleInputChange}
-                            placeholder="Behance URL"
-                        />
-                        <input
-                            type="url"
-                            name="social.dribbble"
-                            value={formData.socialLinks.dribbble}
-                            onChange={handleInputChange}
-                            placeholder="Dribbble URL"
-                        />
-                    </div>
-
-                    <div className="form-actions">
-                        <button type="submit" className="save-button">
-                            Save Changes
-                        </button>
+                    <h1 className="profile-nickname">{formData.nickname || user?.displayName || user?.email}</h1>
+                    {!isEditing && (
                         <button 
-                            type="button" 
-                            className="cancel-button"
-                            onClick={() => {
-                                setIsEditing(false);
-                                setFormData({
-                                    nickname: profile.nickname || '',
-                                    bio: profile.bio || '',
-                                    tags: profile.tags || [],
-                                    availability: profile.availability || [],
-                                    socialLinks: profile.socialLinks || {
-                                        github: '',
-                                        linkedin: '',
-                                        behance: '',
-                                        dribbble: ''
-                                    }
-                                });
-                            }}
+                            className="edit-profile-button main"
+                            onClick={() => setIsEditing(true)}
                         >
-                            Cancel
+                            Edit Profile
                         </button>
-                    </div>
-                </form>
-            ) : (
-                <div className="profile-info">
-                    <div className="info-section">
-                        <h2>About</h2>
-                        <p>{profile?.bio || 'No bio yet'}</p>
-                    </div>
-
-                    <div className="info-section">
-                        <h2>Social Links</h2>
-                        <div className="social-links">
-                            {profile?.socialLinks?.github && (
-                                <a href={profile.socialLinks.github} target="_blank" rel="noopener noreferrer">
-                                    GitHub
-                                </a>
-                            )}
-                            {profile?.socialLinks?.linkedin && (
-                                <a href={profile.socialLinks.linkedin} target="_blank" rel="noopener noreferrer">
-                                    LinkedIn
-                                </a>
-                            )}
-                            {profile?.socialLinks?.behance && (
-                                <a href={profile.socialLinks.behance} target="_blank" rel="noopener noreferrer">
-                                    Behance
-                                </a>
-                            )}
-                            {profile?.socialLinks?.dribbble && (
-                                <a href={profile.socialLinks.dribbble} target="_blank" rel="noopener noreferrer">
-                                    Dribbble
-                                </a>
-                            )}
+                    )}
+                    {isEditing && (
+                        <div className="profile-edit-card">
+                            <form onSubmit={handleSubmit} className="profile-edit-form">
+                                <div className="form-group">
+                                    <label htmlFor="nickname">Nickname</label>
+                                    <input
+                                        type="text"
+                                        id="nickname"
+                                        name="nickname"
+                                        value={formData.nickname}
+                                        onChange={handleInputChange}
+                                        placeholder="Your nickname"
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="bio">About me</label>
+                                    <textarea
+                                        id="bio"
+                                        name="bio"
+                                        value={formData.bio}
+                                        onChange={handleInputChange}
+                                        placeholder="Tell us about yourself"
+                                        rows={4}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="specialisation">Specialisation</label>
+                                    <input
+                                        type="text"
+                                        id="specialisation"
+                                        name="specialisation"
+                                        value={formData.specialisation}
+                                        onChange={handleInputChange}
+                                        placeholder="Your specialisation"
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label>Social Links</label>
+                                    <input type="text" name="social.github" value={formData.socialLinks.github} onChange={handleInputChange} placeholder="GitHub URL" />
+                                    <input type="text" name="social.linkedin" value={formData.socialLinks.linkedin} onChange={handleInputChange} placeholder="LinkedIn URL" />
+                                    <input type="text" name="social.behance" value={formData.socialLinks.behance} onChange={handleInputChange} placeholder="Portfolio/Website URL" />
+                                    <input type="text" name="social.dribbble" value={formData.socialLinks.dribbble} onChange={handleInputChange} placeholder="Dribbble URL" />
+                                </div>
+                                <div className="form-actions">
+                                    <button type="button" className="edit-profile-button main" onClick={() => setIsEditing(false)} style={{marginRight:'1rem'}}>Cancel</button>
+                                    <button type="submit" className="edit-profile-button main">Save Changes</button>
+                                </div>
+                            </form>
                         </div>
+                    )}
+                </div>
+                <div className="profile-info-cards">
+                    <div className="profile-info-card">
+                        <h2>About me</h2>
+                        <p>{profile?.bio || 'No bio yet.'}</p>
+                    </div>
+                    <div className="profile-info-card">
+                        <h2>Specialisation</h2>
+                        <p>{profile?.specialisation || 'Not specified'}</p>
                     </div>
                 </div>
-            )}
+                <div className="profile-social-card">
+                    <h2>Social Links</h2>
+                    <div className="profile-social-links">
+                        {profile?.socialLinks?.github && (
+                            <a href={profile.socialLinks.github} target="_blank" rel="noopener noreferrer" className="profile-social-link github"><Github size={20}/> <span>{profile.socialLinks.github.replace('https://github.com/', '')}</span></a>
+                        )}
+                        {profile?.socialLinks?.linkedin && (
+                            <a href={profile.socialLinks.linkedin} target="_blank" rel="noopener noreferrer" className="profile-social-link linkedin"><Linkedin size={20}/> <span>{profile.socialLinks.linkedin.replace('https://www.linkedin.com/in/', '')}</span></a>
+                        )}
+                        {profile?.socialLinks?.behance && (
+                            <a href={profile.socialLinks.behance} target="_blank" rel="noopener noreferrer" className="profile-social-link behance"><Globe size={20}/> <span>{profile.socialLinks.behance.replace('https://www.behance.net/', '')}</span></a>
+                        )}
+                        {profile?.socialLinks?.dribbble && (
+                            <a href={profile.socialLinks.dribbble} target="_blank" rel="noopener noreferrer" className="profile-social-link dribbble"><Dribbble size={20}/> <span>{profile.socialLinks.dribbble.replace('https://dribbble.com/', '')}</span></a>
+                        )}
+                    </div>
+                </div>
+            </div>
             <button 
-                className="sign-out-button"
+                className="ButtonCustom3"
                 onClick={handleSignOut}
-                style={{ margin: '2rem auto 0', display: 'block' }}
             >
                 Sign Out
             </button>
         </div>
+        </>
     );
 }
 

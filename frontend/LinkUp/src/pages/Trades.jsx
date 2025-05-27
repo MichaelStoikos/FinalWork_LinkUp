@@ -14,6 +14,7 @@ function Trades() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [userProfile, setUserProfile] = useState(null);
+  const [creatorProfiles, setCreatorProfiles] = useState({});
 
   useEffect(() => {
     fetchTrades();
@@ -33,6 +34,28 @@ function Trades() {
     });
     return () => unsubscribe();
   }, []);
+
+  // Fetch creator profiles for all trades
+  useEffect(() => {
+    const fetchProfiles = async () => {
+      const newProfiles = {};
+      const uniqueUids = Array.from(new Set(trades.map(t => t.creatorUid)));
+      await Promise.all(uniqueUids.map(async (uid) => {
+        if (!uid) return;
+        try {
+          const docRef = doc(db, 'users', uid);
+          const docSnap = await getDoc(docRef);
+          if (docSnap.exists()) {
+            newProfiles[uid] = docSnap.data();
+          }
+        } catch (e) {
+          // ignore
+        }
+      }));
+      setCreatorProfiles(newProfiles);
+    };
+    if (trades.length > 0) fetchProfiles();
+  }, [trades]);
 
   const fetchTrades = async () => {
     try {
@@ -81,10 +104,6 @@ function Trades() {
     navigate(`/trade/${tradeId}`);
   };
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
   if (error) {
     return (
       <div className="error-container">
@@ -96,11 +115,15 @@ function Trades() {
   }
 
   return (
+    <>
     <div className="trades-page">
-      <div className="trades-header">
+      <img className="trades-page-bg" src="https://firebasestorage.googleapis.com/v0/b/linkup-c14d5.firebasestorage.app/o/waveBG2.gif?alt=media&token=594e9ca5-3bc6-49c4-8a75-bc782e628545" alt="wave" />
+      <div className="trades-title">
         <h1>Trades</h1>
+      </div>
+      <div className="trades-header">
         <button 
-          className="create-trade-button"
+          className="ButtonCustom"
           onClick={() => setIsModalOpen(true)}
         >
           Create Trade
@@ -109,42 +132,44 @@ function Trades() {
 
       <div className="trades-container">
         {trades.length === 0 ? (
-          <p>No trades found. Create your first trade!</p>
+          <p></p>
         ) : (
-          trades.map((trade) => (
-            <div 
-              key={trade._id} 
-              className="trade-card custom-trade-card"
-              onClick={() => handleTradeClick(trade._id)}
-              style={{ cursor: 'pointer' }}
-            >
-              {trade.image && (
-                <img src={trade.image} alt={trade.name} className="trade-image" />
-              )}
-              {trade.creatorNickname && (
-                <div className="trade-creator">
-                  <span>By: {trade.creatorNickname}</span>
-                </div>
-              )}
-              <div className="trade-info">
-                <div className="trade-avatar-row">
-                  <span className="trade-avatar">
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="4"/><path d="M16 20v-2a4 4 0 0 0-8 0v2"/></svg>
-                  </span>
-                  <span className="trade-name">{trade.name}</span>
-                </div>
-                <p className="trade-description">{trade.description}</p>
-                <div className="trade-service">
-                  Service you get: <b>{trade.serviceGiven}</b>
-                </div>
-                <div className="trade-tags">
-                  {Array.isArray(trade.tags) && trade.tags.map((tag, idx) => (
-                    <span key={idx} className="trade-tag-chip">{tag}</span>
-                  ))}
+          trades.map((trade) => {
+            const creator = creatorProfiles[trade.creatorUid] || {};
+            return (
+              <div 
+                key={trade._id} 
+                className="trade-card custom-trade-card"
+                onClick={() => handleTradeClick(trade._id)}
+                style={{ cursor: 'pointer' }}
+              >
+                {trade.image && (
+                  <img src={trade.image} alt={trade.name} className="trade-image" />
+                )}
+                <div className="trade-info">
+                  <div className="trade-avatar-row">
+                    <span className="trade-avatar">
+                      {creator.photoBase64 ? (
+                        <img src={creator.photoBase64} alt={creator.nickname || 'Profile'} style={{width:'100%',height:'100%',borderRadius:'50%',objectFit:'cover'}} />
+                      ) : (
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="4"/><path d="M16 20v-2a4 4 0 0 0-8 0v2"/></svg>
+                      )}
+                    </span>
+                    <span className="trade-name">{creator.nickname || trade.creatorNickname || 'Anonymous'}</span>
+                  </div>
+                  <p className="trade-description">{trade.description}</p>
+                  <div className="trade-service">
+                    Service you get: <b>{trade.serviceGiven}</b>
+                  </div>
+                  <div className="trade-tags">
+                    {Array.isArray(trade.tags) && trade.tags.map((tag, idx) => (
+                      <span key={idx} className="trade-tag-chip">{tag}</span>
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))
+            );
+          })
         )}
       </div>
 
@@ -162,6 +187,7 @@ function Trades() {
         onClose={() => setIsAuthModalOpen(false)} 
       />
     </div>
+    </>
   );
 }
 

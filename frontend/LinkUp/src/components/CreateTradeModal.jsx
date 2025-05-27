@@ -130,134 +130,128 @@ function CreateTradeModal({ isOpen, onClose, onSubmit, onLoginClick, userProfile
     <div className="modal-overlay">
       <div className="modal-content">
         <div className="modal-header">
-          <h2>Create New Trade</h2>
+          <h2>Trade Creation</h2>
           <button className="close-button" onClick={onClose}>&times;</button>
         </div>
         <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="name">Job Name:</label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="difficulty">Difficulty Level:</label>
-            <select
-              id="difficulty"
-              name="difficulty"
-              value={formData.difficulty}
-              onChange={handleChange}
-              required
-            >
-              <option value="">Select difficulty</option>
-              {DIFFICULTY_OPTIONS.map(opt => (
-                <option key={opt} value={opt}>{opt}</option>
-              ))}
-            </select>
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="serviceGiven">Service Given:</label>
-            <select
-              id="serviceGiven"
-              name="serviceGiven"
-              value={formData.serviceGiven}
-              onChange={handleChange}
-              required
-            >
-              <option value="">Select service</option>
-              {SERVICE_OPTIONS.map(opt => (
-                <option key={opt} value={opt}>{opt}</option>
-              ))}
-            </select>
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="serviceWanted">Service Wanted:</label>
-            <select
-              id="serviceWanted"
-              name="serviceWanted"
-              value={formData.serviceWanted}
-              onChange={handleChange}
-              required
-            >
-              <option value="">Select service</option>
-              {SERVICE_OPTIONS.map(opt => (
-                <option key={opt} value={opt}>{opt}</option>
-              ))}
-            </select>
-          </div>
-
-          <div className="form-group">
-            <label>Tags:</label>
-            <div className="tags-input-row">
-              <input
-                type="text"
-                value={tagInput}
-                onChange={e => setTagInput(e.target.value)}
-                placeholder="Add a new tag"
-              />
-              <button type="button" onClick={handleTagAdd}>+</button>
+          <div className="form-flex">
+            <div className="form-left">
+              <div className="form-group">
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  placeholder="Job Name"
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <div
+                  className="file-drop-area"
+                  onDrop={handleDrop}
+                  onDragOver={handleDragOver}
+                >
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    style={{ display: 'none' }}
+                    id="fileInput"
+                  />
+                  <label htmlFor="fileInput" className="file-drop-label">
+                    {imagePreview ? (
+                      <img src={imagePreview} alt="Preview" className="image-preview" />
+                    ) : (
+                      <>
+                        <span role="img" aria-label="upload">📁</span> <div>DRAG FILES TO UPLOAD</div>
+                      </>
+                    )}
+                  </label>
+                </div>
+              </div>
+              <div className="form-group">
+                <textarea
+                  id="description"
+                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
+                  placeholder="Short Description"
+                  required
+                />
+              </div>
             </div>
-            <div className="tags-list">
-              {formData.tags.map(tag => (
-                <span key={tag} className="tag-chip">
-                  {tag}
-                  <button type="button" onClick={() => handleTagRemove(tag)}>&times;</button>
-                </span>
-              ))}
+            <div className="form-right">
+              <div className="form-group">
+                <select
+                  id="difficulty"
+                  name="difficulty"
+                  value={formData.difficulty}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="">Difficulty Level</option>
+                  {DIFFICULTY_OPTIONS.map(opt => (
+                    <option key={opt} value={opt}>{opt}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="form-group">
+                <select
+                  id="serviceGiven"
+                  name="serviceGiven"
+                  value={formData.serviceGiven}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="">Service Given</option>
+                  {SERVICE_OPTIONS.map(opt => (
+                    <option key={opt} value={opt}>{opt}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="form-group">
+                <select
+                  id="serviceWanted"
+                  name="serviceWanted"
+                  value={formData.serviceWanted}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="">Service Wanted</option>
+                  {SERVICE_OPTIONS.map(opt => (
+                    <option key={opt} value={opt}>{opt}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="form-group">
+                <div className="tags-input-row">
+                  <input
+                    type="text"
+                    value={tagInput}
+                    onChange={e => setTagInput(e.target.value)}
+                    placeholder="Add a New Tag"
+                  />
+                  <button type="button" onClick={handleTagAdd}>+</button>
+                </div>
+                <div className="tags-list">
+                  {formData.tags.map(tag => (
+                    <span key={tag} className="tag-chip">
+                      {tag}
+                      <button type="button" onClick={() => handleTagRemove(tag)}>&times;</button>
+                    </span>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
-
-          <div className="form-group">
-            <label>Image/File:</label>
-            <div
-              className="file-drop-area"
-              onDrop={handleDrop}
-              onDragOver={handleDragOver}
-            >
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleFileChange}
-                style={{ display: 'none' }}
-                id="fileInput"
-              />
-              <label htmlFor="fileInput" className="file-drop-label">
-                {imagePreview ? (
-                  <img src={imagePreview} alt="Preview" className="image-preview" />
-                ) : (
-                  <>
-                    <span role="img" aria-label="upload">📁</span> Drag files here or click to upload
-                  </>
-                )}
-              </label>
-            </div>
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="description">Short Description:</label>
-            <textarea
-              id="description"
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
           <div className="modal-footer">
             <button type="button" onClick={onClose} className="cancel-button">
               Cancel
             </button>
             <button type="submit" className="submit-button" disabled={uploading}>
-              {uploading ? 'Uploading...' : 'Submit'}
+              {uploading ? 'Uploading...' : 'Create Trade'}
             </button>
           </div>
         </form>
