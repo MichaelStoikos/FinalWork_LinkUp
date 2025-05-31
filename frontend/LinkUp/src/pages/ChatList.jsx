@@ -1,14 +1,16 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { auth, db } from '../firebase/config';
 import { collection, query, where, or, getDocs, doc, getDoc } from 'firebase/firestore';
 import '../style/ChatList.css';
 
 function ChatList() {
   const navigate = useNavigate();
+  const { chatId } = useParams();
   const [chats, setChats] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [search, setSearch] = useState('');
 
   useEffect(() => {
     if (!auth.currentUser) {
@@ -46,21 +48,33 @@ function ChatList() {
     fetchChats();
   }, [navigate]);
 
+  const filteredChats = chats.filter(chat =>
+    chat.partner.nickname.toLowerCase().includes(search.toLowerCase())
+  );
+
   if (loading) return <div className="loading">Loading chats...</div>;
   if (error) return <div className="error-message">{error}</div>;
 
   return (
     <div className="chat-list-container">
-      <h1>Messages</h1>
-      {chats.length === 0 ? (
+      <img className="trades-page-bg" src="https://firebasestorage.googleapis.com/v0/b/linkup-c14d5.firebasestorage.app/o/waveBG2.gif?alt=media&token=594e9ca5-3bc6-49c4-8a75-bc782e628545" alt="wave" />
+      <input
+        className="chat-list-search"
+        type="text"
+        placeholder="Search..."
+        value={search}
+        onChange={e => setSearch(e.target.value)}
+      />
+      {filteredChats.length === 0 ? (
         <p>No chats yet.</p>
       ) : (
         <div className="chat-list">
-          {chats.map((chat) => (
+          {filteredChats.map((chat) => (
             <div 
               key={chat.id} 
-              className="chat-list-item"
+              className={`chat-list-item${chat.id === chatId ? ' selected' : ''}`}
               onClick={() => navigate(`/messages/${chat.id}`)}
+              tabIndex={0}
             >
               <img 
                 src={chat.partner.photoBase64 || '/User.png'} 
@@ -69,7 +83,7 @@ function ChatList() {
               />
               <div className="chat-list-info">
                 <span className="chat-list-name">{chat.partner.nickname}</span>
-                {chat.tradeName && <span className="chat-list-trade">Trade: {chat.tradeName}</span>}
+                {chat.tradeName && <span className="chat-list-trade">{chat.tradeName}</span>}
               </div>
             </div>
           ))}

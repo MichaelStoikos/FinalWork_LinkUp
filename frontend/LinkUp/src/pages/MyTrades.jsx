@@ -29,10 +29,56 @@ function MyTrades() {
     try {
       setLoading(true);
       const tradesRef = collection(db, 'trades');
-      const q = query(tradesRef, where("creatorUid", "==", auth.currentUser.uid), where("status", "==", "open"));
-      const querySnapshot = await getDocs(q);
-      const trades = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setMyTrades(trades);
+      
+      // First, get all accepted collaboration requests where user is the requester
+      const requestsRef = collection(db, 'collaborationRequests');
+      const requestsQuery = query(
+        requestsRef,
+        where("requesterUid", "==", auth.currentUser.uid),
+        where("status", "==", "accepted")
+      );
+      const requestsSnapshot = await getDocs(requestsQuery);
+      const collaboratorTradeIds = requestsSnapshot.docs.map(doc => doc.data().tradeId);
+
+      // Get trades created by the user
+      const creatorQuery = query(
+        tradesRef,
+        where("creatorUid", "==", auth.currentUser.uid),
+        where("status", "in", ["open", "in-progress"])
+      );
+      
+      // Get trades where user is a collaborator
+      const collaboratorQuery = query(
+        tradesRef,
+        where("status", "in", ["open", "in-progress"])
+      );
+
+      // Execute both queries
+      const [creatorSnapshot, collaboratorSnapshot] = await Promise.all([
+        getDocs(creatorQuery),
+        getDocs(collaboratorQuery)
+      ]);
+
+      // Combine and deduplicate results
+      const creatorTrades = creatorSnapshot.docs.map(doc => ({ 
+        id: doc.id, 
+        ...doc.data(),
+        userRole: 'creator'
+      }));
+      
+      const collaboratorTrades = collaboratorSnapshot.docs
+        .filter(doc => collaboratorTradeIds.includes(doc.id))
+        .map(doc => ({ 
+          id: doc.id, 
+          ...doc.data(),
+          userRole: 'collaborator'
+        }));
+
+      // Combine both arrays and remove duplicates
+      const allTrades = [...creatorTrades, ...collaboratorTrades];
+      const uniqueTrades = Array.from(new Map(allTrades.map(trade => [trade.id, trade])).values());
+      
+      setMyTrades(uniqueTrades);
     } catch (err) {
       console.error("Error fetching my trades:", err);
       setError(err.message);
@@ -155,17 +201,15 @@ function MyTrades() {
                 {trade.image && (
                   <img src={trade.image} alt={trade.name} className="trade-image" />
                 )}
-                {trade.creatorNickname && (
-                  <div className="trade-creator">
-                    <span>By: {trade.creatorNickname}</span>
-                  </div>
-                )}
                 <div className="trade-info">
                   <div className="trade-avatar-row">
                     <span className="trade-avatar">
                       <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="4"/><path d="M16 20v-2a4 4 0 0 0-8 0v2"/></svg>
                     </span>
                     <span className="trade-name">{trade.name}</span>
+                    <span className="trade-role">
+                      {trade.userRole === 'creator' ? '(Created by you)' : '(Collaborating)'}
+                    </span>
                   </div>
                   <p className="trade-description">{trade.description}</p>
                   <div className="trade-service">
@@ -177,24 +221,28 @@ function MyTrades() {
                     ))}
                   </div>
                   <div className="trade-actions" style={{ marginTop: '1rem' }}>
-                    <button 
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleEdit(trade);
-                      }} 
-                      className="edit-trade-btn"
-                    >
-                      Edit
-                    </button>
-                    <button 
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDelete(trade.id);
-                      }} 
-                      className="delete-trade-btn"
-                    >
-                      Delete
-                    </button>
+                    {trade.userRole === 'creator' && (
+                      <>
+                        <button 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleEdit(trade);
+                          }} 
+                          className="edit-trade-btn"
+                        >
+                          Edit
+                        </button>
+                        <button 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDelete(trade.id);
+                          }} 
+                          className="delete-trade-btn"
+                        >
+                          Delete
+                        </button>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>

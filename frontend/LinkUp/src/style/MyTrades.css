@@ -126,3 +126,17 @@
 .reject-btn:hover {
   background: #e53935;
 }
+
+.trade-role {
+    font-size: 0.9rem;
+    color: #666;
+    margin-left: 0.5rem;
+    font-style: italic;
+}
+
+.trade-avatar-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
