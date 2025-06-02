@@ -51,8 +51,6 @@ function ChatList() {
   const filteredChats = chats.filter(chat =>
     chat.partner.nickname.toLowerCase().includes(search.toLowerCase())
   );
-
-  if (loading) return <div className="loading">Loading chats...</div>;
   if (error) return <div className="error-message">{error}</div>;
 
   return (

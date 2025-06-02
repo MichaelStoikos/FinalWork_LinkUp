@@ -8,3 +8,4 @@ handleGoogleSignIn: https://medium.com/%40josephpay911/how-to-connect-firebase-a
 FileReader: https://developer.mozilla.org/en-US/docs/Web/API/FileReader
 Drag: https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API
 Example for CreateTradeModal.jsx: https://chatgpt.com/share/68251741-4f10-8004-abe9-47a86b63982c
+

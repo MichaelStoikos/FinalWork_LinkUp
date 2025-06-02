@@ -119,14 +119,14 @@ function Trades() {
     <div className="trades-page">
       <img className="trades-page-bg" src="https://firebasestorage.googleapis.com/v0/b/linkup-c14d5.firebasestorage.app/o/waveBG2.gif?alt=media&token=594e9ca5-3bc6-49c4-8a75-bc782e628545" alt="wave" />
       <div className="trades-title">
-        <h1>Trades</h1>
+        <h1>Swaps</h1>
       </div>
       <div className="trades-header">
         <button 
           className="ButtonCustom"
           onClick={() => setIsModalOpen(true)}
         >
-          Create Trade
+          Create Swap
         </button>
       </div>
 

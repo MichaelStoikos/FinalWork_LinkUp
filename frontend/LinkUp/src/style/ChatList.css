@@ -1,21 +1,28 @@
 .chat-list-container {
-  width: 100%;
-  padding: 1.5rem 1rem 1rem 1rem;
+  width: 400px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
   background: none;
   box-shadow: none;
   border-radius: 0;
+  position: relative;
 }
 
 .chat-list-search {
-  width: 100%;
+  width: 90%;
   padding: 0.7rem 1.2rem;
   border: 1.5px solid #e3e6f0;
   border-radius: 8px;
   font-size: 1.05rem;
-  margin-bottom: 1.2rem;
+  margin: 0 auto 1.2rem auto;
   background: #f6f7fb;
   outline: none;
   transition: border 0.2s;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  color: black;
 }
 
 .chat-list-search:focus {
@@ -26,6 +33,30 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+  height: calc(100% - 80px); /* Adjust based on search bar height + margin */
+  scrollbar-width: thin;
+  scrollbar-color: #646cff #f0f0f0;
+}
+
+/* Custom scrollbar styles for Webkit browsers */
+.chat-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.chat-list::-webkit-scrollbar-track {
+  background: #f0f0f0;
+  border-radius: 4px;
+}
+
+.chat-list::-webkit-scrollbar-thumb {
+  background: #646cff;
+  border-radius: 4px;
+}
+
+.chat-list::-webkit-scrollbar-thumb:hover {
+  background: #535bf2;
 }
 
 .chat-list-item {

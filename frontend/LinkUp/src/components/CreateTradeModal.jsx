@@ -13,11 +13,11 @@ const DIFFICULTY_OPTIONS = [
 
 const SERVICE_OPTIONS = [
   'Web Development',
-  'Design',
-  'Showreel',
-  'Marketing',
-  'Writing',
-  'Other'
+  'Motion Graphics',
+  'Web Design',
+  'Branding',
+  'App Development',
+  '3D Modeling'
 ];
 
 function CreateTradeModal({ isOpen, onClose, onSubmit, onLoginClick, userProfile }) {
