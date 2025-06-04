@@ -114,6 +114,24 @@
   font-size: 1.1rem;
   cursor: pointer;
 }
+
+.file-size-hint {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: 0.5rem;
+  font-weight: normal;
+}
+
+.image-error-message {
+  color: #dc3545;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  text-align: center;
+  padding: 0.5rem;
+  background-color: rgba(220, 53, 69, 0.1);
+  border-radius: 4px;
+}
+
 .image-preview {
   max-width: 120px;
   max-height: 120px;
@@ -202,11 +220,16 @@
   cursor: pointer;
 }
 
+.modal-footer button {
+  margin-top: 1.5rem;
+  border-radius: 8px;
+}
+
 .modal-footer {
   display: flex;
   justify-content: flex-end;
   gap: 1.5rem;
-  margin-top: 1.5rem;
+  margin-top: 3rem;
 }
 .cancel-button {
   background-color: #f5f5f5;

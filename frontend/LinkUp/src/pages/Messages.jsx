@@ -24,6 +24,7 @@ function Messages() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [chatPartner, setChatPartner] = useState(null);
+  const [partnerId, setPartnerId] = useState(null);
   const [uploadingFile, setUploadingFile] = useState(false);
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
@@ -53,6 +54,7 @@ function Messages() {
         const partnerId = requestData.creatorUid === auth.currentUser.uid 
           ? requestData.requesterUid 
           : requestData.creatorUid;
+        setPartnerId(partnerId);
 
         // Fetch partner's profile
         const partnerRef = doc(db, 'users', partnerId);
@@ -165,24 +167,25 @@ function Messages() {
       setError("Failed to download file");
     }
   };
-
-  if (loading) return <div className="loading">Loading chat...</div>;
   if (error) return <div className="error-message">{error}</div>;
 
   return (
     <div className="messages-container">
       <div className="chat-header">
-        <button className="back-button" onClick={() => navigate(-1)}>
-          ← Back
-        </button>
         {chatPartner && (
-          <div className="chat-partner-info">
+          <div 
+            className="chat-partner-info partner-link-row"
+            onClick={() => partnerId && navigate(`/account/${partnerId}`)}
+            style={{ cursor: 'pointer' }}
+          >
             <img 
               src={chatPartner.photoBase64 || '/User.png'} 
               alt={chatPartner.nickname} 
               className="partner-avatar"
             />
-            <h2>{chatPartner.nickname}</h2>
+            <h2 className="partner-name-link" style={{margin: 0}}>
+              {chatPartner.nickname}
+            </h2>
           </div>
         )}
       </div>

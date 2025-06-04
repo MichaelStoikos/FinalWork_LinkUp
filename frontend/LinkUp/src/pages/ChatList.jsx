@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { auth, db } from '../firebase/config';
-import { collection, query, where, or, getDocs, doc, getDoc } from 'firebase/firestore';
+import { collection, query, where, getDocs, doc, getDoc, orderBy, onSnapshot } from 'firebase/firestore';
 import '../style/ChatList.css';
 
-function ChatList() {
+function ChatList({ onChatsUpdate }) {
   const navigate = useNavigate();
   const { chatId } = useParams();
   const [chats, setChats] = useState([]);
@@ -17,7 +17,9 @@ function ChatList() {
       navigate('/');
       return;
     }
-    const fetchChats = async () => {
+    let unsubMessages = null;
+    let isMounted = true;
+    const fetchChatsAndListen = async () => {
       try {
         setLoading(true);
         // Get all accepted collaboration requests where user is creator or requester
@@ -26,8 +28,8 @@ function ChatList() {
         const q2 = query(requestsRef, where('requesterUid', '==', auth.currentUser.uid), where('status', '==', 'accepted'));
         const [snap1, snap2] = await Promise.all([getDocs(q1), getDocs(q2)]);
         const allChats = [...snap1.docs, ...snap2.docs];
-        // Fetch partner info for each chat
-        const chatList = await Promise.all(allChats.map(async (docSnap) => {
+        // Prepare chat info
+        const chatInfoList = await Promise.all(allChats.map(async (docSnap) => {
           const data = docSnap.data();
           const partnerId = data.creatorUid === auth.currentUser.uid ? data.requesterUid : data.creatorUid;
           const partnerRef = doc(db, 'users', partnerId);
@@ -36,17 +38,67 @@ function ChatList() {
             id: docSnap.id,
             partner: partnerSnap.exists() ? partnerSnap.data() : { nickname: 'Unknown', photoBase64: '' },
             tradeName: data.tradeName || '',
+            partnerId,
           };
         }));
-        setChats(chatList);
+        // Listen to all messages in real time
+        const messagesRef = collection(db, 'messages');
+        const messagesQuery = query(messagesRef, orderBy('createdAt', 'desc'));
+        unsubMessages = onSnapshot(messagesQuery, (snapshot) => {
+          // For each chat, find the latest message
+          const messages = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+          const chatListWithLatest = chatInfoList.map(chat => {
+            const latestMsg = messages.find(msg => msg.chatId === chat.id);
+            let latestMessage = '';
+            let latestMessageTime = null;
+            if (latestMsg) {
+              if (latestMsg.text) {
+                latestMessage = latestMsg.text;
+              } else if (latestMsg.fileName) {
+                latestMessage = `📎 ${latestMsg.fileName}`;
+              }
+              latestMessageTime = latestMsg.createdAt;
+            }
+            // Prefix with 'You:' or partner's name
+            let messagePrefix = '';
+            if (latestMsg) {
+              if (latestMsg.senderId === auth.currentUser.uid) {
+                messagePrefix = 'You: ';
+              } else {
+                messagePrefix = (chat.partner.nickname || 'Unknown') + ': ';
+              }
+            }
+            return {
+              ...chat,
+              latestMessage: latestMsg ? (messagePrefix + latestMessage) : '',
+              latestMessageTime,
+            };
+          });
+          // Sort chats by latest message time (descending)
+          chatListWithLatest.sort((a, b) => {
+            if (!a.latestMessageTime && !b.latestMessageTime) return 0;
+            if (!a.latestMessageTime) return 1;
+            if (!b.latestMessageTime) return -1;
+            return b.latestMessageTime.seconds - a.latestMessageTime.seconds;
+          });
+          if (isMounted) {
+            setChats(chatListWithLatest);
+            onChatsUpdate(chatListWithLatest);
+          }
+        });
+        setError(null);
       } catch (err) {
         setError('Failed to load chats: ' + err.message);
       } finally {
         setLoading(false);
       }
     };
-    fetchChats();
-  }, [navigate]);
+    fetchChatsAndListen();
+    return () => {
+      isMounted = false;
+      if (unsubMessages) unsubMessages();
+    };
+  }, [navigate, onChatsUpdate]);
 
   const filteredChats = chats.filter(chat =>
     chat.partner.nickname.toLowerCase().includes(search.toLowerCase())
@@ -81,7 +133,9 @@ function ChatList() {
               />
               <div className="chat-list-info">
                 <span className="chat-list-name">{chat.partner.nickname}</span>
-                {chat.tradeName && <span className="chat-list-trade">{chat.tradeName}</span>}
+                <span className="chat-list-trade">
+                  {chat.latestMessage ? chat.latestMessage : (chat.tradeName || '')}
+                </span>
               </div>
             </div>
           ))}

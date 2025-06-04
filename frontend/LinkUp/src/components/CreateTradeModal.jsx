@@ -34,6 +34,8 @@ function CreateTradeModal({ isOpen, onClose, onSubmit, onLoginClick, userProfile
   const [tagInput, setTagInput] = useState('');
   const [imagePreview, setImagePreview] = useState('');
   const [uploading, setUploading] = useState(false);
+  const [imageError, setImageError] = useState('');
+  const MAX_FILE_SIZE = 500 * 1024; // 500KB in bytes
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -54,6 +56,15 @@ function CreateTradeModal({ isOpen, onClose, onSubmit, onLoginClick, userProfile
     setFormData(prev => ({ ...prev, tags: prev.tags.filter(t => t !== tag) }));
   };
 
+  const validateImage = (file) => {
+    setImageError('');
+    if (file.size > MAX_FILE_SIZE) {
+      setImageError('Image size must be less than 500KB. Please choose a smaller image or compress it.');
+      return false;
+    }
+    return true;
+  };
+
   const fileToBase64 = (file) => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -66,6 +77,10 @@ function CreateTradeModal({ isOpen, onClose, onSubmit, onLoginClick, userProfile
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
+      if (!validateImage(file)) {
+        e.target.value = ''; // Reset the file input
+        return;
+      }
       setUploading(true);
       const base64 = await fileToBase64(file);
       setFormData(prev => ({ ...prev, image: base64 }));
@@ -78,6 +93,9 @@ function CreateTradeModal({ isOpen, onClose, onSubmit, onLoginClick, userProfile
     e.preventDefault();
     const file = e.dataTransfer.files[0];
     if (file) {
+      if (!validateImage(file)) {
+        return;
+      }
       setUploading(true);
       const base64 = await fileToBase64(file);
       setFormData(prev => ({ ...prev, image: base64 }));
@@ -165,11 +183,18 @@ function CreateTradeModal({ isOpen, onClose, onSubmit, onLoginClick, userProfile
                       <img src={imagePreview} alt="Preview" className="image-preview" />
                     ) : (
                       <>
-                        <span role="img" aria-label="upload">📁</span> <div>DRAG FILES TO UPLOAD</div>
+                        <span role="img" aria-label="upload">📁</span> 
+                        <div>DRAG FILES TO UPLOAD</div>
+                        <div className="file-size-hint">Max size: 500KB</div>
                       </>
                     )}
                   </label>
                 </div>
+                {imageError && (
+                  <div className="image-error-message">
+                    {imageError}
+                  </div>
+                )}
               </div>
               <div className="form-group">
                 <textarea

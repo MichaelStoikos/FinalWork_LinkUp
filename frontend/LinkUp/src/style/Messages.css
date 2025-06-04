@@ -1,5 +1,5 @@
 .messages-container {
-  max-width: 1200px;
+  width: 90%;
   margin: 0 auto;
   padding: 2rem;
   height: calc(100vh - 4rem);
@@ -173,5 +173,26 @@
 .send-message-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.partner-name-link {
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.2s;
+}
+
+.partner-name-link:hover {
+  text-decoration: underline;
+  color: #646cff;
+}
+
+.partner-link-row:hover .partner-name-link {
+  text-decoration: underline;
+  color: #646cff;
+}
+
+.partner-link-row {
+  cursor: pointer;
 }
 

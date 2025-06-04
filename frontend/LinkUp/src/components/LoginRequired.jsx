@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 const LoginRequired = ({ onLoginClick }) => (
   <div className="login-required-container">
-    <h2>You must be logged in to create a trade.</h2>
+    <h2>You must be logged in to use this feature.</h2>
     {onLoginClick ? (
       <button className="login-link" onClick={onLoginClick}>
         Log In

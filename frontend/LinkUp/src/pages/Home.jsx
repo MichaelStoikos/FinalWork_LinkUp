@@ -1,13 +1,17 @@
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../style/Home.css';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from '../firebase/config';
 import { CodeXml } from 'lucide-react';
 import { Clapperboard } from 'lucide-react';
 import { Figma } from 'lucide-react';
 import { Copyright } from 'lucide-react';
 import { Box } from 'lucide-react';
 import { TabletSmartphone } from 'lucide-react';
+import '../style/Home.css';
 
 function Home() {
+    const [user] = useAuthState(auth);
     const navigate = useNavigate();
 
     return (
@@ -46,7 +50,7 @@ function Home() {
                         <div className="skill-card">
                             <TabletSmartphone className="skill-icon" />
                             <h3>App Development</h3>
-                            <p>Bring your ideas to life with powerful mobile and web apps. Whether it’s iOS, Android, or cross-platform.</p>
+                            <p>Bring your ideas to life with powerful mobile and web apps. Whether it's iOS, Android, or cross-platform.</p>
                         </div>
                         <div className="skill-card">
                             <Box className="skill-icon" />
@@ -58,17 +62,16 @@ function Home() {
                         This is just the beginning. In the future, we plan to expand into even more fields to support all kinds of digital collaboration.
                     </div>
                 </section>
-                
             </div>
         </div>
         <section className="tutorial-section">
-                    <div className="tutorial-content">
-                        <h1 className="tutorial-title">SO EASY TO USE, YOU MIGHT<br />THINK YOU ALREADY USED IT</h1>
-                        <p className="tutorial-desc">Yes, using&nbsp;<strong>Linkup</strong>&nbsp;is easy, but a quick reminder can make it even smoother. Click the button below to follow our simple tutorial!</p>
-                        <button className="ButtonCustom" onClick={() => navigate('/tutorial')}>Start Tutorial</button>
-                    </div>
+            <div className="tutorial-content">
+                <h1 className="tutorial-title">SO EASY TO USE, YOU MIGHT<br />THINK YOU ALREADY USED IT</h1>
+                <p className="tutorial-desc">Yes, using&nbsp;<strong>Linkup</strong>&nbsp;is easy, but a quick reminder can make it even smoother. Click the button below to follow our simple tutorial!</p>
+                <button className="ButtonCustom" onClick={() => navigate('/tutorial')}>Start Tutorial</button>
+            </div>
         </section>
-      </>
+        </>
     );
 }
 
