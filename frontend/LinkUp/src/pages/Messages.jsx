@@ -100,17 +100,35 @@ function Messages() {
     if (!newMessage.trim() && !uploadingFile) return;
 
     try {
+      console.log('Sending message...');
       const messagesRef = collection(db, 'messages');
-      await addDoc(messagesRef, {
+      const messageDoc = await addDoc(messagesRef, {
         chatId,
         senderId: auth.currentUser.uid,
         senderName: auth.currentUser.displayName || 'Anonymous',
         text: newMessage.trim(),
         createdAt: serverTimestamp()
       });
+      console.log('Message sent:', messageDoc.id);
+
+      // Create notification for the chat partner
+      console.log('Creating notification for chat partner:', partnerId);
+      const notificationsRef = collection(db, 'notifications');
+      const notificationData = {
+        userId: partnerId,
+        type: 'message',
+        message: `${auth.currentUser.displayName || 'Someone'} sent you a message: "${newMessage.trim().substring(0, 50)}${newMessage.trim().length > 50 ? '...' : ''}"`,
+        chatId: chatId,
+        read: false,
+        createdAt: serverTimestamp()
+      };
+      console.log('Notification data:', notificationData);
+      const notificationDoc = await addDoc(notificationsRef, notificationData);
+      console.log('Notification created:', notificationDoc.id);
+
       setNewMessage('');
     } catch (err) {
-      console.error("Error sending message:", err);
+      console.error("Error in message sending process:", err);
       setError("Failed to send message");
     }
   };

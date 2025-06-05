@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { auth, db } from '../firebase/config';
-import { doc, getDoc, collection, addDoc, query, where, getDocs } from 'firebase/firestore';
+import { doc, getDoc, collection, addDoc, query, where, getDocs, serverTimestamp } from 'firebase/firestore';
 import '../style/TradeDetails.css';
 import { Helmet } from 'react-helmet';
 import React from 'react';
@@ -75,14 +75,15 @@ function TradeDetails() {
 
   const handleRequestCollaboration = async () => {
     if (!auth.currentUser) {
-      // Show login modal or redirect to login
+      console.log('No user logged in, cannot send collaboration request');
       return;
     }
 
     try {
       setRequestLoading(true);
+      console.log('Creating collaboration request...');
       const requestsRef = collection(db, 'collaborationRequests');
-      await addDoc(requestsRef, {
+      const requestDoc = await addDoc(requestsRef, {
         tradeId,
         tradeName: trade.name,
         requesterUid: auth.currentUser.uid,
@@ -91,9 +92,27 @@ function TradeDetails() {
         status: 'pending',
         createdAt: new Date().toISOString()
       });
+      console.log('Collaboration request created:', requestDoc.id);
+
+      // Create notification for the trade creator
+      console.log('Creating notification for trade creator:', trade.creatorUid);
+      const notificationsRef = collection(db, 'notifications');
+      const notificationData = {
+        userId: trade.creatorUid,
+        type: 'collaboration_request',
+        message: `${auth.currentUser.displayName || 'Someone'} wants to collaborate on "${trade.name}"`,
+        tradeId: tradeId,
+        requestId: requestDoc.id,
+        read: false,
+        createdAt: serverTimestamp()
+      };
+      console.log('Notification data:', notificationData);
+      const notificationDoc = await addDoc(notificationsRef, notificationData);
+      console.log('Notification created:', notificationDoc.id);
+
       setHasRequested(true);
     } catch (err) {
-      console.error("Error requesting collaboration:", err);
+      console.error("Error in collaboration request process:", err);
       setError("Failed to send collaboration request");
     } finally {
       setRequestLoading(false);

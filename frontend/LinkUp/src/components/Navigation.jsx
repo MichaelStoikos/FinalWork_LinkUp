@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { auth, db } from '../firebase/config';
 import { doc, getDoc } from 'firebase/firestore';
 import AuthModal from './AuthModal';
+import NotificationBell from './NotificationBell';
 import '../style/Navigation.css';
 
 function Navigation() {
@@ -68,6 +69,7 @@ function Navigation() {
             <div className="auth-section">
                 {user ? (
                     <div className="user-menu">
+                        <NotificationBell />
                         <button 
                             className="profile-button"
                             onClick={toggleDropdown}
