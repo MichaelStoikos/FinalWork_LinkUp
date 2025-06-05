@@ -8,6 +8,15 @@
   overflow: hidden;
 }
 
+.messages-page-2col video{
+  position: absolute;
+  z-index: -15;
+  width: 150%;
+  height: 100%;
+  top: -2px;
+  left: 0px;
+  object-fit: cover;
+}
 .messages-sidebar {
   background: white;
   border-radius: 18px;

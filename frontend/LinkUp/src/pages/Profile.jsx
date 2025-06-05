@@ -6,6 +6,10 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { updateProfile } from 'firebase/auth';
 import '../style/Profile.css';
 import { Github, Linkedin, Dribbble, Globe } from 'lucide-react';
+import { Helmet } from 'react-helmet';
+import React from 'react';
+import { motion } from 'framer-motion';
+
 
 function Profile() {
     const [user, setUser] = useState(null);
@@ -172,137 +176,149 @@ function Profile() {
     }
 
     return (
-        <>
-        <div className="profile-container">
-            <img className="profile-bg" src="https://firebasestorage.googleapis.com/v0/b/linkup-c14d5.firebasestorage.app/o/waveBG2.gif?alt=media&token=594e9ca5-3bc6-49c4-8a75-bc782e628545" alt="wave" />
-            <div className="profile-redesign">
-                <div className="profile-center-block">
-                    <div className="profile-avatar-outer" style={{position: 'relative'}}>
-                        <img 
-                            src={
-                                (profile?.photoBase64 && profile.photoBase64 !== '') 
-                                    ? profile.photoBase64 
-                                    : (user.photoURL || '/User.png')
-                            }
-                            alt="Profile" 
-                            className="profile-avatar-img"
-                            onClick={isEditing ? handleImageClick : undefined}
-                            style={{cursor: isEditing ? 'pointer' : 'default'}}
-                        />
-                        {isEditing && (
-                            <div className="profile-picture-overlay" onClick={handleImageClick} style={{cursor: 'pointer'}}>
-                                <span>Change Photo</span>
-                            </div>
-                        )}
-                        {uploadingImage && (
-                            <div className="uploading-overlay">
-                                <span>Uploading...</span>
-                            </div>
-                        )}
-                    </div>
-                    <input
-                        type="file"
-                        ref={fileInputRef}
-                        onChange={handleImageChange}
-                        accept="image/*"
-                        style={{ display: 'none' }}
-                    />
-                    <h1 className="profile-nickname">{formData.nickname || user?.displayName || user?.email}</h1>
-                    {!isEditing && (
-                        <button 
-                            className="edit-profile-button main"
-                            onClick={() => setIsEditing(true)}
-                        >
-                            Edit Profile
-                        </button>
-                    )}
-                    {isEditing && (
-                        <div className="profile-edit-card">
-                            <form onSubmit={handleSubmit} className="profile-edit-form">
-                                <div className="form-group">
-                                    <label htmlFor="nickname">Nickname</label>
-                                    <input
-                                        type="text"
-                                        id="nickname"
-                                        name="nickname"
-                                        value={formData.nickname}
-                                        onChange={handleInputChange}
-                                        placeholder="Your nickname"
-                                    />
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4 }}
+        >
+            <Helmet>
+                <link
+                rel="preload"
+                as="video"
+                href="https://firebasestorage.googleapis.com/v0/b/linkup-c14d5.firebasestorage.app/o/waveBG2.mp4?alt=media&token=f41d68c3-7e04-47ac-a5fd-20c326f3c9ae"
+                />
+            </Helmet>
+            <div className="profile-container">
+                <video autoPlay loop muted playsInline src="https://firebasestorage.googleapis.com/v0/b/linkup-c14d5.firebasestorage.app/o/waveBG2.mp4?alt=media&token=f41d68c3-7e04-47ac-a5fd-20c326f3c9ae" alt="wave" />
+                <div className="profile-redesign">
+                    <div className="profile-center-block">
+                        <div className="profile-avatar-outer" style={{position: 'relative'}}>
+                            <img 
+                                src={
+                                    (profile?.photoBase64 && profile.photoBase64 !== '') 
+                                        ? profile.photoBase64 
+                                        : (user.photoURL || '/User.png')
+                                }
+                                alt="Profile" 
+                                className="profile-avatar-img"
+                                onClick={isEditing ? handleImageClick : undefined}
+                                style={{cursor: isEditing ? 'pointer' : 'default'}}
+                            />
+                            {isEditing && (
+                                <div className="profile-picture-overlay" onClick={handleImageClick} style={{cursor: 'pointer'}}>
+                                    <span>Change Photo</span>
                                 </div>
-                                <div className="form-group">
-                                    <label htmlFor="bio">About me</label>
-                                    <textarea
-                                        id="bio"
-                                        name="bio"
-                                        value={formData.bio}
-                                        onChange={handleInputChange}
-                                        placeholder="Tell us about yourself"
-                                        rows={4}
-                                    />
+                            )}
+                            {uploadingImage && (
+                                <div className="uploading-overlay">
+                                    <span>Uploading...</span>
                                 </div>
-                                <div className="form-group">
-                                    <label htmlFor="specialisation">Specialisation</label>
-                                    <input
-                                        type="text"
-                                        id="specialisation"
-                                        name="specialisation"
-                                        value={formData.specialisation}
-                                        onChange={handleInputChange}
-                                        placeholder="Your specialisation"
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label>Social Links</label>
-                                    <input type="text" name="social.github" value={formData.socialLinks.github} onChange={handleInputChange} placeholder="GitHub URL" />
-                                    <input type="text" name="social.linkedin" value={formData.socialLinks.linkedin} onChange={handleInputChange} placeholder="LinkedIn URL" />
-                                    <input type="text" name="social.behance" value={formData.socialLinks.behance} onChange={handleInputChange} placeholder="Portfolio/Website URL" />
-                                    <input type="text" name="social.dribbble" value={formData.socialLinks.dribbble} onChange={handleInputChange} placeholder="Dribbble URL" />
-                                </div>
-                                <div className="form-actions">
-                                    <button type="button" className="edit-profile-button main" onClick={() => setIsEditing(false)} style={{marginRight:'1rem'}}>Cancel</button>
-                                    <button type="submit" className="edit-profile-button main">Save Changes</button>
-                                </div>
-                            </form>
+                            )}
                         </div>
-                    )}
-                </div>
-                <div className="profile-info-cards">
-                    <div className="profile-info-card">
-                        <h2>About me</h2>
-                        <p>{profile?.bio || 'No bio yet.'}</p>
+                        <input
+                            type="file"
+                            ref={fileInputRef}
+                            onChange={handleImageChange}
+                            accept="image/*"
+                            style={{ display: 'none' }}
+                        />
+                        <h1 className="profile-nickname">{formData.nickname || user?.displayName || user?.email}</h1>
+                        {!isEditing && (
+                            <button 
+                                className="edit-profile-button main"
+                                onClick={() => setIsEditing(true)}
+                            >
+                                Edit Profile
+                            </button>
+                        )}
+                        {isEditing && (
+                            <div className="profile-edit-card">
+                                <form onSubmit={handleSubmit} className="profile-edit-form">
+                                    <div className="form-group">
+                                        <label htmlFor="nickname">Nickname</label>
+                                        <input
+                                            type="text"
+                                            id="nickname"
+                                            name="nickname"
+                                            value={formData.nickname}
+                                            onChange={handleInputChange}
+                                            placeholder="Your nickname"
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="bio">About me</label>
+                                        <textarea
+                                            id="bio"
+                                            name="bio"
+                                            value={formData.bio}
+                                            onChange={handleInputChange}
+                                            placeholder="Tell us about yourself"
+                                            rows={4}
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="specialisation">Specialisation</label>
+                                        <input
+                                            type="text"
+                                            id="specialisation"
+                                            name="specialisation"
+                                            value={formData.specialisation}
+                                            onChange={handleInputChange}
+                                            placeholder="Your specialisation"
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Social Links</label>
+                                        <input type="text" name="social.github" value={formData.socialLinks.github} onChange={handleInputChange} placeholder="GitHub URL" />
+                                        <input type="text" name="social.linkedin" value={formData.socialLinks.linkedin} onChange={handleInputChange} placeholder="LinkedIn URL" />
+                                        <input type="text" name="social.behance" value={formData.socialLinks.behance} onChange={handleInputChange} placeholder="Portfolio/Website URL" />
+                                        <input type="text" name="social.dribbble" value={formData.socialLinks.dribbble} onChange={handleInputChange} placeholder="Dribbble URL" />
+                                    </div>
+                                    <div className="form-actions">
+                                        <button type="button" className="edit-profile-button main" onClick={() => setIsEditing(false)} style={{marginRight:'1rem'}}>Cancel</button>
+                                        <button type="submit" className="edit-profile-button main">Save Changes</button>
+                                    </div>
+                                </form>
+                            </div>
+                        )}
                     </div>
-                    <div className="profile-info-card">
-                        <h2>Specialisation</h2>
-                        <p>{profile?.specialisation || 'Not specified'}</p>
+                    <div className="profile-info-cards">
+                        <div className="profile-info-card">
+                            <h2>About me</h2>
+                            <p>{profile?.bio || 'No bio yet.'}</p>
+                        </div>
+                        <div className="profile-info-card">
+                            <h2>Specialisation</h2>
+                            <p>{profile?.specialisation || 'Not specified'}</p>
+                        </div>
+                    </div>
+                    <div className="profile-social-card">
+                        <h2>Social Links</h2>
+                        <div className="profile-social-links">
+                            {profile?.socialLinks?.github && (
+                                <a href={profile.socialLinks.github} target="_blank" rel="noopener noreferrer" className="profile-social-link github"><Github size={20}/> <span>{profile.socialLinks.github.replace('https://github.com/', '')}</span></a>
+                            )}
+                            {profile?.socialLinks?.linkedin && (
+                                <a href={profile.socialLinks.linkedin} target="_blank" rel="noopener noreferrer" className="profile-social-link linkedin"><Linkedin size={20}/> <span>{profile.socialLinks.linkedin.replace('https://www.linkedin.com/in/', '')}</span></a>
+                            )}
+                            {profile?.socialLinks?.behance && (
+                                <a href={profile.socialLinks.behance} target="_blank" rel="noopener noreferrer" className="profile-social-link behance"><Globe size={20}/> <span>{profile.socialLinks.behance.replace('https://www.behance.net/', '')}</span></a>
+                            )}
+                            {profile?.socialLinks?.dribbble && (
+                                <a href={profile.socialLinks.dribbble} target="_blank" rel="noopener noreferrer" className="profile-social-link dribbble"><Dribbble size={20}/> <span>{profile.socialLinks.dribbble.replace('https://dribbble.com/', '')}</span></a>
+                            )}
+                        </div>
                     </div>
                 </div>
-                <div className="profile-social-card">
-                    <h2>Social Links</h2>
-                    <div className="profile-social-links">
-                        {profile?.socialLinks?.github && (
-                            <a href={profile.socialLinks.github} target="_blank" rel="noopener noreferrer" className="profile-social-link github"><Github size={20}/> <span>{profile.socialLinks.github.replace('https://github.com/', '')}</span></a>
-                        )}
-                        {profile?.socialLinks?.linkedin && (
-                            <a href={profile.socialLinks.linkedin} target="_blank" rel="noopener noreferrer" className="profile-social-link linkedin"><Linkedin size={20}/> <span>{profile.socialLinks.linkedin.replace('https://www.linkedin.com/in/', '')}</span></a>
-                        )}
-                        {profile?.socialLinks?.behance && (
-                            <a href={profile.socialLinks.behance} target="_blank" rel="noopener noreferrer" className="profile-social-link behance"><Globe size={20}/> <span>{profile.socialLinks.behance.replace('https://www.behance.net/', '')}</span></a>
-                        )}
-                        {profile?.socialLinks?.dribbble && (
-                            <a href={profile.socialLinks.dribbble} target="_blank" rel="noopener noreferrer" className="profile-social-link dribbble"><Dribbble size={20}/> <span>{profile.socialLinks.dribbble.replace('https://dribbble.com/', '')}</span></a>
-                        )}
-                    </div>
-                </div>
+                <button 
+                    className="ButtonCustom3"
+                    onClick={handleSignOut}
+                >
+                    Sign Out
+                </button>
             </div>
-            <button 
-                className="ButtonCustom3"
-                onClick={handleSignOut}
-            >
-                Sign Out
-            </button>
-        </div>
-        </>
+        </motion.div>
     );
 }
 

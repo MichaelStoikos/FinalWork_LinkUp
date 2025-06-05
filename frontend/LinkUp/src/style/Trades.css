@@ -4,13 +4,14 @@
   margin: 0 auto;
 }
 
-.trades-page-bg{
+.trades-page video{
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
+  z-index: -15;
+  width: 150%;
   height: 100%;
-  z-index: -1;
+  top: -2px;
+  left: 0px;
+  object-fit: cover;
 }
 
 .trades-title h1{

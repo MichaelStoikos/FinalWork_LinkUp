@@ -5,6 +5,9 @@ import AuthModal from '../components/AuthModal'
 import { auth, db } from '../firebase/config'
 import { doc, getDoc } from 'firebase/firestore'
 import '../style/Trades.css'
+import { Helmet } from 'react-helmet';
+import React from 'react';
+import { motion } from 'framer-motion';
 
 function Trades() {
   const navigate = useNavigate();
@@ -115,79 +118,91 @@ function Trades() {
   }
 
   return (
-    <>
-    <div className="trades-page">
-      <img className="trades-page-bg" src="https://firebasestorage.googleapis.com/v0/b/linkup-c14d5.firebasestorage.app/o/waveBG2.gif?alt=media&token=594e9ca5-3bc6-49c4-8a75-bc782e628545" alt="wave" />
-      <div className="trades-title">
-        <h1>Swaps</h1>
-      </div>
-      <div className="trades-header">
-        <button 
-          className="ButtonCustom"
-          onClick={() => setIsModalOpen(true)}
-        >
-          Create Swap
-        </button>
-      </div>
+    <motion.div
+      initial={{ opacity: 0.5 }}
+      animate={{ opacity: 2 }}
+      exit={{ opacity: 0.3 }}
+      transition={{ duration: 0.5 }}
+    >
+      <Helmet>
+        <link
+          rel="preload"
+          as="video"
+          href="https://firebasestorage.googleapis.com/v0/b/linkup-c14d5.firebasestorage.app/o/waveBG2.mp4?alt=media&token=f41d68c3-7e04-47ac-a5fd-20c326f3c9ae"
+        />
+      </Helmet>
+      <div className="trades-page">
+        <video autoPlay loop muted playsInline src="https://firebasestorage.googleapis.com/v0/b/linkup-c14d5.firebasestorage.app/o/waveBG2.mp4?alt=media&token=f41d68c3-7e04-47ac-a5fd-20c326f3c9ae" alt="wave" />
+        <div className="trades-title">
+          <h1>Swaps</h1>
+        </div>
+        <div className="trades-header">
+          <button 
+            className="ButtonCustom"
+            onClick={() => setIsModalOpen(true)}
+          >
+            Create Swap
+          </button>
+        </div>
 
-      <div className="trades-container">
-        {trades.length === 0 ? (
-          <p></p>
-        ) : (
-          trades.map((trade) => {
-            const creator = creatorProfiles[trade.creatorUid] || {};
-            return (
-              <div 
-                key={trade._id} 
-                className="trade-card custom-trade-card"
-                onClick={() => handleTradeClick(trade._id)}
-                style={{ cursor: 'pointer' }}
-              >
-                {trade.image && (
-                  <img src={trade.image} alt={trade.name} className="trade-image" />
-                )}
-                <div className="trade-info">
-                  <div className="trade-avatar-row">
-                    <span className="trade-avatar">
-                      {creator.photoBase64 ? (
-                        <img src={creator.photoBase64} alt={creator.nickname || 'Profile'} style={{width:'100%',height:'100%',borderRadius:'50%',objectFit:'cover'}} />
-                      ) : (
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="4"/><path d="M16 20v-2a4 4 0 0 0-8 0v2"/></svg>
-                      )}
-                    </span>
-                    <span className="trade-name">{creator.nickname || trade.creatorNickname || 'Anonymous'}</span>
-                  </div>
-                  <p className="trade-description">{trade.description}</p>
-                  <div className="trade-service">
-                    Service you get: <b>{trade.serviceGiven}</b>
-                  </div>
-                  <div className="trade-tags">
-                    {Array.isArray(trade.tags) && trade.tags.map((tag, idx) => (
-                      <span key={idx} className="trade-tag-chip">{tag}</span>
-                    ))}
+        <div className="trades-container">
+          {trades.length === 0 ? (
+            <p></p>
+          ) : (
+            trades.map((trade) => {
+              const creator = creatorProfiles[trade.creatorUid] || {};
+              return (
+                <div 
+                  key={trade._id} 
+                  className="trade-card custom-trade-card"
+                  onClick={() => handleTradeClick(trade._id)}
+                  style={{ cursor: 'pointer' }}
+                >
+                  {trade.image && (
+                    <img src={trade.image} alt={trade.name} className="trade-image" />
+                  )}
+                  <div className="trade-info">
+                    <div className="trade-avatar-row">
+                      <span className="trade-avatar">
+                        {creator.photoBase64 ? (
+                          <img src={creator.photoBase64} alt={creator.nickname || 'Profile'} style={{width:'100%',height:'100%',borderRadius:'50%',objectFit:'cover'}} />
+                        ) : (
+                          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="4"/><path d="M16 20v-2a4 4 0 0 0-8 0v2"/></svg>
+                        )}
+                      </span>
+                      <span className="trade-name">{creator.nickname || trade.creatorNickname || 'Anonymous'}</span>
+                    </div>
+                    <p className="trade-description">{trade.description}</p>
+                    <div className="trade-service">
+                      Service you get: <b>{trade.serviceGiven}</b>
+                    </div>
+                    <div className="trade-tags">
+                      {Array.isArray(trade.tags) && trade.tags.map((tag, idx) => (
+                        <span key={idx} className="trade-tag-chip">{tag}</span>
+                      ))}
+                    </div>
                   </div>
                 </div>
-              </div>
-            );
-          })
+              );
+            })
+          )}
+        </div>
+
+        {isModalOpen && (
+          <CreateTradeModal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            onSubmit={handleCreateTrade}
+            userProfile={userProfile}
+          />
         )}
-      </div>
 
-      {isModalOpen && (
-        <CreateTradeModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          onSubmit={handleCreateTrade}
-          userProfile={userProfile}
+        <AuthModal 
+          isOpen={isAuthModalOpen} 
+          onClose={() => setIsAuthModalOpen(false)} 
         />
-      )}
-
-      <AuthModal 
-        isOpen={isAuthModalOpen} 
-        onClose={() => setIsAuthModalOpen(false)} 
-      />
-    </div>
-    </>
+      </div>
+    </motion.div>
   );
 }
 

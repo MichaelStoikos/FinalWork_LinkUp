@@ -9,16 +9,31 @@ import { Copyright } from 'lucide-react';
 import { Box } from 'lucide-react';
 import { TabletSmartphone } from 'lucide-react';
 import '../style/Home.css';
+import { Helmet } from 'react-helmet';
+import { motion } from 'framer-motion';
 
 function Home() {
     const [user] = useAuthState(auth);
     const navigate = useNavigate();
 
     return (
-        <>
+        <motion.div
+            initial={{ opacity: 0.5 }}
+            animate={{ opacity: 2 }}
+            exit={{ opacity: 0.3 }}
+            transition={{ duration: 0.5 }}
+        >
+        <Helmet>
+            <link
+            rel="preload"
+            as="video"
+            href="https://firebasestorage.googleapis.com/v0/b/linkup-c14d5.firebasestorage.app/o/wave.mp4?alt=media&token=7f183abd-3e77-4258-a283-bac765a4c44c"
+            />
+        </Helmet>
         <div className="home-container">            
             <div className="home-content">
-                <img src="https://firebasestorage.googleapis.com/v0/b/linkup-c14d5.firebasestorage.app/o/wave.gif?alt=media&token=8765c07c-56e9-4398-b862-0d57f3435759" alt="wave" />
+                <div className="background-mask"></div>
+                <video autoPlay loop muted playsInline src="https://firebasestorage.googleapis.com/v0/b/linkup-c14d5.firebasestorage.app/o/wave.mp4?alt=media&token=7f183abd-3e77-4258-a283-bac765a4c44c" alt="wave" />
                 <section className="hero-section">
                     <h1>CONNECT. COLLABORATE. CREATE.</h1>
                     <h3 className="hero-sub">Someone out there needs your magic.<br />Go find them.</h3>
@@ -71,7 +86,7 @@ function Home() {
                 <button className="ButtonCustom" onClick={() => navigate('/tutorial')}>Start Tutorial</button>
             </div>
         </section>
-        </>
+        </motion.div>
     );
 }
 

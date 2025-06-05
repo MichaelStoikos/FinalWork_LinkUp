@@ -1,10 +1,11 @@
-.home-content img{
+.home-content video{
     position: absolute;
     z-index: -15;
-    width: 102%;
+    width: 150%;
     height: 100%;
     top: -2px;
-    left: -2px;
+    left: 0px;
+    object-fit: cover;
 }
 /* .box{
     width: 102%;

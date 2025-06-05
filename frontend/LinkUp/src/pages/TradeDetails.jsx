@@ -3,6 +3,9 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { auth, db } from '../firebase/config';
 import { doc, getDoc, collection, addDoc, query, where, getDocs } from 'firebase/firestore';
 import '../style/TradeDetails.css';
+import { Helmet } from 'react-helmet';
+import React from 'react';
+import { motion } from 'framer-motion';
 
 function TradeDetails() {
   const { tradeId } = useParams();
@@ -108,106 +111,120 @@ function TradeDetails() {
   if (!trade) return <div className="error-message">Trade not found</div>;
 
   return (
-    <div className="trade-details-container">
-      <button className="back-button" onClick={() => navigate(-1)}>
-        ← Back
-      </button>
-      
-      <div className="trade-details-content">
-        <div className="trade-header">
-          <h1>{trade.name}</h1>
-          {trade.creatorNickname && (
-            <div className="trade-creator-info">
-              <span>Created by: </span>
-              <button 
-                className="creator-link"
-                onClick={handleCreatorClick}
-              >
-                {trade.creatorNickname}
-              </button>
-            </div>
-          )}
-        </div>
-
-        {trade.image && (
-          <div className="trade-image-container">
-            <img src={trade.image} alt={trade.name} className="trade-detail-image" />
-          </div>
-        )}
-
-        <div className="trade-details-grid">
-          <div className="trade-section">
-            <h2>Description</h2>
-            <p>{trade.description}</p>
-          </div>
-
-          <div className="trade-section">
-            <h2>Service Offered</h2>
-            <p className="service-given">{trade.serviceGiven}</p>
-          </div>
-
-          {trade.tags && trade.tags.length > 0 && (
-            <div className="trade-section">
-              <h2>Tags</h2>
-              <div className="trade-tags">
-                {trade.tags.map((tag, idx) => (
-                  <span key={idx} className="trade-tag-chip">{tag}</span>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {!isOwner && auth.currentUser && (
-            <div className="trade-section collaboration-section">
-              <h2>Collaboration</h2>
-              {hasRequested ? (
-                <p className="request-status">Collaboration request sent!</p>
-              ) : (
-                <button
-                  className="request-collaboration-btn"
-                  onClick={handleRequestCollaboration}
-                  disabled={requestLoading}
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.4 }}
+    >
+      <Helmet>
+        <link
+          rel="preload"
+          as="video"
+          href="https://firebasestorage.googleapis.com/v0/b/linkup-c14d5.firebasestorage.app/o/waveBG2.mp4?alt=media&token=f41d68c3-7e04-47ac-a5fd-20c326f3c9ae"
+        />
+      </Helmet>
+      <div className="trade-details-container">
+        <video autoPlay loop muted playsInline src="https://firebasestorage.googleapis.com/v0/b/linkup-c14d5.firebasestorage.app/o/waveBG2.mp4?alt=media&token=f41d68c3-7e04-47ac-a5fd-20c326f3c9ae" alt="wave" />
+        <button className="back-button" onClick={() => navigate(-1)}>
+          ← Back
+        </button>
+        <div className="trade-details-content">
+          <div className="trade-header">
+            <h1>{trade.name}</h1>
+            {trade.creatorNickname && (
+              <div className="trade-creator-info">
+                <span>Created by: </span>
+                <button 
+                  className="creator-link"
+                  onClick={handleCreatorClick}
                 >
-                  {requestLoading ? 'Sending Request...' : 'Request Collaboration'}
+                  {trade.creatorNickname}
                 </button>
-              )}
+              </div>
+            )}
+          </div>
+
+          {trade.image && (
+            <div className="trade-image-container">
+              <img src={trade.image} alt={trade.name} className="trade-detail-image" />
             </div>
           )}
 
-          {creatorProfile && (
+          <div className="trade-details-grid">
             <div className="trade-section">
-              <h2>About the Creator</h2>
-              <div className="creator-profile">
-                {creatorProfile.photoBase64 && (
-                  <img 
-                    src={creatorProfile.photoBase64} 
-                    alt={creatorProfile.nickname || 'Creator'} 
-                    className="creator-avatar"
-                  />
-                )}
-                <div className="creator-info">
-                  <p className="creator-bio">{creatorProfile.bio || 'No bio available'}</p>
-                  {creatorProfile.socialLinks && (
-                    <div className="creator-social-links">
-                      {creatorProfile.socialLinks.github && (
-                        <a href={creatorProfile.socialLinks.github} target="_blank" rel="noopener noreferrer">
-                          GitHub
-                        </a>
-                      )}
-                      {creatorProfile.socialLinks.linkedin && (
-                        <a href={creatorProfile.socialLinks.linkedin} target="_blank" rel="noopener noreferrer">
-                          LinkedIn
-                        </a>
-                      )}
-                    </div>
-                  )}
+              <h2>Description</h2>
+              <p>{trade.description}</p>
+            </div>
+
+            <div className="trade-section">
+              <h2>Service Offered</h2>
+              <p className="service-given">{trade.serviceGiven}</p>
+            </div>
+
+            {trade.tags && trade.tags.length > 0 && (
+              <div className="trade-section">
+                <h2>Tags</h2>
+                <div className="trade-tags">
+                  {trade.tags.map((tag, idx) => (
+                    <span key={idx} className="trade-tag-chip">{tag}</span>
+                  ))}
                 </div>
               </div>
-            </div>
-          )}
+            )}
+
+            {!isOwner && auth.currentUser && (
+              <div className="trade-section collaboration-section">
+                <h2>Collaboration</h2>
+                {hasRequested ? (
+                  <p className="request-status">Collaboration request sent!</p>
+                ) : (
+                  <button
+                    className="request-collaboration-btn"
+                    onClick={handleRequestCollaboration}
+                    disabled={requestLoading}
+                  >
+                    {requestLoading ? 'Sending Request...' : 'Request Collaboration'}
+                  </button>
+                )}
+              </div>
+            )}
+
+            {creatorProfile && (
+              <div className="trade-section">
+                <h2>About the Creator</h2>
+                <div className="creator-profile">
+                  {creatorProfile.photoBase64 && (
+                    <img 
+                      src={creatorProfile.photoBase64} 
+                      alt={creatorProfile.nickname || 'Creator'} 
+                      className="creator-avatar"
+                    />
+                  )}
+                  <div className="creator-info">
+                    <p className="creator-bio">{creatorProfile.bio || 'No bio available'}</p>
+                    {creatorProfile.socialLinks && (
+                      <div className="creator-social-links">
+                        {creatorProfile.socialLinks.github && (
+                          <a href={creatorProfile.socialLinks.github} target="_blank" rel="noopener noreferrer">
+                            GitHub
+                          </a>
+                        )}
+                        {creatorProfile.socialLinks.linkedin && (
+                          <a href={creatorProfile.socialLinks.linkedin} target="_blank" rel="noopener noreferrer">
+                            LinkedIn
+                          </a>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
