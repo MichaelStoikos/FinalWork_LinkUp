@@ -84,7 +84,7 @@ function Navigation() {
                         {isDropdownOpen && (
                             <div className="profile-dropdown">
                                 <button onClick={handleProfileClick}>Account Details</button>
-                                <button onClick={handleMyTradesClick} >My Trades</button>
+                                <button onClick={handleMyTradesClick} >My Swaps</button>
                                 <button onClick={handleSignOut} >Sign Out</button>
                             </div>
                         )}

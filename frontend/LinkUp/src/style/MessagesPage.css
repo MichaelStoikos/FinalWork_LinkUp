@@ -3,12 +3,12 @@
   height: 700px;
   max-width: 90%;
   margin: 0 auto;
-  gap: 2rem;
+  gap: 1rem;
   padding: 1rem 0;
   overflow: hidden;
 }
 
-.messages-page-2col video{
+.trades-page-bg{
   position: absolute;
   z-index: -15;
   width: 150%;

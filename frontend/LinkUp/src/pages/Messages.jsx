@@ -15,6 +15,8 @@ import {
 } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import '../style/Messages.css';
+import DeliverWorkModal from '../components/DeliverWorkModal';
+import DeliverablesPanel from '../components/DeliverablesPanel';
 
 function Messages() {
   const { chatId } = useParams();
@@ -28,6 +30,8 @@ function Messages() {
   const [uploadingFile, setUploadingFile] = useState(false);
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
+  const [isDeliverModalOpen, setDeliverModalOpen] = useState(false);
+  const [showSidePanel, setShowSidePanel] = useState(false);
 
   useEffect(() => {
     if (!auth.currentUser) {
@@ -188,81 +192,105 @@ function Messages() {
   if (error) return <div className="error-message">{error}</div>;
 
   return (
-    <div className="messages-container">
-      <div className="chat-header">
-        {chatPartner && (
-          <div 
-            className="chat-partner-info partner-link-row"
-            onClick={() => partnerId && navigate(`/account/${partnerId}`)}
-            style={{ cursor: 'pointer' }}
+    <div className="messages-container-flex">
+      <div className={`messages-main-panel${showSidePanel ? ' shrunk' : ''}`}> 
+        <div className="chat-header">
+          
+          {chatPartner && (
+            <div 
+              className="chat-partner-info partner-link-row"
+              onClick={() => partnerId && navigate(`/account/${partnerId}`)}
+              style={{ cursor: 'pointer' }}
+            >
+              <img 
+                src={chatPartner.photoBase64 || '/User.png'} 
+                alt={chatPartner.nickname || 'User'}
+                className="chat-partner-avatar"
+              />
+              <span className="chat-partner-nickname">{chatPartner.nickname || 'User'}</span>
+            </div>
+          )}
+          <button
+            className="triple-dot-btn"
+            onClick={() => setShowSidePanel((v) => !v)}
+            title="Show deliverables panel"
           >
-            <img 
-              src={chatPartner.photoBase64 || '/User.png'} 
-              alt={chatPartner.nickname} 
-              className="partner-avatar"
-            />
-            <h2 className="partner-name-link" style={{margin: 0}}>
-              {chatPartner.nickname}
-            </h2>
-          </div>
-        )}
-      </div>
-
-      <div className="messages-list">
-        {messages.map((message) => (
-          <div 
-            key={message.id} 
-            className={`message ${message.senderId === auth.currentUser.uid ? 'sent' : 'received'}`}
+            &#8942;
+          </button>
+        </div>
+        <DeliverWorkModal
+          tradeId={chatId}
+          userId={auth.currentUser?.uid}
+          isOpen={isDeliverModalOpen}
+          onClose={() => setDeliverModalOpen(false)}
+        />
+        <div className="messages-list">
+          {messages.map((message) => (
+            <div 
+              key={message.id} 
+              className={`message ${message.senderId === auth.currentUser.uid ? 'sent' : 'received'}`}
+            >
+              {message.text && <p className="message-text">{message.text}</p>}
+              {message.fileUrl && (
+                <div className="file-message">
+                  <button 
+                    className="file-download-btn"
+                    onClick={() => handleDownloadFile(message.fileUrl, message.fileName)}
+                  >
+                    📎 {message.fileName}
+                  </button>
+                </div>
+              )}
+              <span className="message-time">
+                {message.createdAt?.toDate().toLocaleTimeString()}
+              </span>
+            </div>
+          ))}
+          <div ref={messagesEndRef} />
+        </div>
+        <form className="message-input-form" onSubmit={handleSendMessage}>
+          <input
+            type="text"
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
+            placeholder="Type a message..."
+            disabled={uploadingFile}
+          />
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleFileUpload}
+            style={{ display: 'none' }}
+          />
+          <button 
+            type="button" 
+            className="file-upload-btn"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={uploadingFile}
           >
-            {message.text && <p className="message-text">{message.text}</p>}
-            {message.fileUrl && (
-              <div className="file-message">
-                <button 
-                  className="file-download-btn"
-                  onClick={() => handleDownloadFile(message.fileUrl, message.fileName)}
-                >
-                  📎 {message.fileName}
-                </button>
-              </div>
-            )}
-            <span className="message-time">
-              {message.createdAt?.toDate().toLocaleTimeString()}
-            </span>
-          </div>
-        ))}
-        <div ref={messagesEndRef} />
+            📎
+          </button>
+          <button 
+            type="submit" 
+            className="send-message-btn"
+            disabled={(!newMessage.trim() && !uploadingFile) || uploadingFile}
+          >
+            {uploadingFile ? 'Uploading...' : 'Send'}
+          </button>
+        </form>
       </div>
-
-      <form className="message-input-form" onSubmit={handleSendMessage}>
-        <input
-          type="text"
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-          placeholder="Type a message..."
-          disabled={uploadingFile}
-        />
-        <input
-          type="file"
-          ref={fileInputRef}
-          onChange={handleFileUpload}
-          style={{ display: 'none' }}
-        />
-        <button 
-          type="button" 
-          className="file-upload-btn"
-          onClick={() => fileInputRef.current?.click()}
-          disabled={uploadingFile}
-        >
-          📎
-        </button>
-        <button 
-          type="submit" 
-          className="send-message-btn"
-          disabled={(!newMessage.trim() && !uploadingFile) || uploadingFile}
-        >
-          {uploadingFile ? 'Uploading...' : 'Send'}
-        </button>
-      </form>
+      {showSidePanel && (
+        <div className="messages-side-panel">
+          <button className="close-side-panel-btn" onClick={() => setShowSidePanel(false)}>
+            &times;
+          </button>
+          <DeliverablesPanel
+            tradeId={chatId}
+            userId={auth.currentUser?.uid}
+            partnerId={partnerId}
+          />
+        </div>
+      )}
     </div>
   );
 }

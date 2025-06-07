@@ -9,6 +9,7 @@ import TradeDetails from './pages/TradeDetails';
 import AccountDetails from './pages/AccountDetails';
 import MessagesPage from './pages/MessagesPage';
 import './style/index.css';
+import './style/DeliverablesPanel.css';
 
 function App() {
   return (

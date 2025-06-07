@@ -260,7 +260,7 @@ function MyTrades() {
               className={`tab-button ${activeTab === 'trades' ? 'active' : ''}`}
               onClick={() => setActiveTab('trades')}
             >
-              My Trades
+              My Swaps
             </button>
             <button 
               className={`tab-button ${activeTab === 'requests' ? 'active' : ''}`}

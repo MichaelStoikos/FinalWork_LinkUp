@@ -6,6 +6,7 @@ import '../style/TradeDetails.css';
 import { Helmet } from 'react-helmet';
 import React from 'react';
 import { motion } from 'framer-motion';
+import DeliverablesPanel from '../components/DeliverablesPanel';
 
 function TradeDetails() {
   const { tradeId } = useParams();
@@ -243,6 +244,13 @@ function TradeDetails() {
           </div>
         </div>
       </div>
+      {trade && auth.currentUser && (
+        <DeliverablesPanel
+          tradeId={tradeId}
+          userId={auth.currentUser.uid}
+          partnerId={isOwner ? null : trade.creatorUid}
+        />
+      )}
     </motion.div>
   );
 }
