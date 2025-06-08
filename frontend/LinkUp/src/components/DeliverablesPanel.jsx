@@ -269,9 +269,6 @@ function DeliverablesPanel({ tradeId, userId, partnerId }) {
             <button onClick={handleAccept} disabled={myAccepted} style={{ background: myAccepted ? '#7bffb2' : undefined }}>
               {myAccepted ? 'You Accepted!' : "Accept Partner's Work"}
             </button>
-            <button onClick={handleRequestChanges} style={{ marginLeft: 8 }}>
-              Request Changes
-            </button>
             <div style={{ marginTop: 8, color: partnerAccepted ? '#7bffb2' : '#b8c1ec' }}>
               {partnerAccepted ? 'Partner has accepted!' : 'Partner has not accepted yet.'}
             </div>
