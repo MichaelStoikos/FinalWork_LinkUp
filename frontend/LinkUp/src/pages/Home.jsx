@@ -35,9 +35,14 @@ function Home() {
                 <div className="background-mask"></div>
                 <video autoPlay loop muted playsInline src="https://firebasestorage.googleapis.com/v0/b/linkup-c14d5.firebasestorage.app/o/wave.mp4?alt=media&token=7f183abd-3e77-4258-a283-bac765a4c44c" alt="wave" />
                 <section className="hero-section">
-                    <h1>CONNECT. COLLABORATE. CREATE.</h1>
-                    <h3 className="hero-sub">Someone out there needs your magic.<br />Go find them.</h3>
-                    <button className="ButtonCustom" onClick={() => navigate('/trades')}>Swaps</button>
+                    <div className="hero-left">
+                        <h1>CONNECT. COLLABORATE. CREATE.</h1>
+                        <h3 className="hero-sub">Someone out there needs your magic.<br />Go find them.</h3>
+                        <button className="ButtonCustom" onClick={() => navigate('/trades')}>Swaps</button>
+                    </div>
+                    <div className="hero-right">
+                        <img src="https://firebasestorage.googleapis.com/v0/b/linkup-c14d5.firebasestorage.app/o/IsoHero.png?alt=media&token=00cdd34d-3952-4b0f-8d39-cfdfccec9cc0" alt="hero" />
+                    </div>
                 </section>
                 <section className="skills-section">
                     <h1 className="skills-title">THE SKILLS THAT POWER LINKUP</h1>
