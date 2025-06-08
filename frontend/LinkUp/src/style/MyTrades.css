@@ -195,8 +195,13 @@
 
 .trades-container {
   display: flex;
-  gap: 3rem;
   flex-wrap: wrap;
+  justify-content: center;
+  gap: 2.5rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 0;
 }
 
 /* Custom Trade Card Styles */
@@ -336,7 +341,7 @@
   border-radius: 10px;
   box-shadow: 0 4px 16px rgba(60,60,100,0.13);
   padding: 2.5rem 2.5rem 2rem 2.5rem;
-  max-width: 80%;
+  max-width: 1300px;
   width: 100%;
   margin: 2rem auto;
   min-height: 500px;
@@ -344,4 +349,16 @@
   flex-direction: column;
   align-items: center;
   border: 2px solid #e0e7ff;
+}
+
+@media (max-width: 900px) {
+  .trades-container {
+    gap: 1.2rem;
+    max-width: 98vw;
+    padding: 1rem 0;
+  }
+  .custom-trade-card {
+    min-width: 90vw;
+    max-width: 98vw;
+  }
 }
