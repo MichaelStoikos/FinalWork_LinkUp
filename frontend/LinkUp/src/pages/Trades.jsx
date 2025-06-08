@@ -63,7 +63,7 @@ function Trades() {
   const fetchTrades = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:5000/api/trades');
+      const response = await fetch('https://finalworklinkup-production.up.railway.app/api/trades');
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.details || 'Failed to fetch trades');
@@ -81,7 +81,7 @@ function Trades() {
 
   const handleCreateTrade = async (tradeData) => {
     try {
-      const response = await fetch('http://localhost:5000/api/trades', {
+      const response = await fetch('https://finalworklinkup-production.up.railway.app/api/trades', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -112,7 +112,7 @@ function Trades() {
       <div className="error-container">
         <h2>Error Loading Trades</h2>
         <p>{error}</p>
-        <p>Please make sure the backend server is running at http://localhost:5000</p>
+        <p>Please make sure the backend server is running at https://finalworklinkup-production.up.railway.app</p>
       </div>
     );
   }

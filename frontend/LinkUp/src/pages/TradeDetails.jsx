@@ -56,7 +56,7 @@ function TradeDetails() {
           }
         } else {
           // If not in Firestore, try the backend API
-          const response = await fetch(`http://localhost:5000/api/trades/${tradeId}`);
+          const response = await fetch(`https://finalworklinkup-production.up.railway.app/api/trades/${tradeId}`);
           if (!response.ok) {
             throw new Error('Trade not found');
           }
