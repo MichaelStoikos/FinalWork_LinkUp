@@ -244,13 +244,6 @@ function TradeDetails() {
           </div>
         </div>
       </div>
-      {trade && auth.currentUser && (
-        <DeliverablesPanel
-          tradeId={tradeId}
-          userId={auth.currentUser.uid}
-          partnerId={isOwner ? null : trade.creatorUid}
-        />
-      )}
     </motion.div>
   );
 }

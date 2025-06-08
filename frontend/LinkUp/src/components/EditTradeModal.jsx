@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { db } from '../firebase/config';
+import { db, storage } from '../firebase/config';
 import { doc, updateDoc } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import '../style/CreateTradeModal.css';
 
 const DIFFICULTY_OPTIONS = [
@@ -66,22 +67,20 @@ function EditTradeModal({ isOpen, onClose, trade, onSubmit }) {
     setFormData(prev => ({ ...prev, tags: prev.tags.filter(t => t !== tag) }));
   };
 
-  const fileToBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = error => reject(error);
-    });
-  };
-
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
       setUploading(true);
-      const base64 = await fileToBase64(file);
-      setFormData(prev => ({ ...prev, image: base64 }));
-      setImagePreview(base64);
+      try {
+        // Upload to Firebase Storage
+        const fileRef = ref(storage, `trade-images/${Date.now()}-${file.name}`);
+        await uploadBytes(fileRef, file);
+        const url = await getDownloadURL(fileRef);
+        setFormData(prev => ({ ...prev, image: url }));
+        setImagePreview(url);
+      } catch (err) {
+        alert('Failed to upload image. Please try again.');
+      }
       setUploading(false);
     }
   };
@@ -91,9 +90,15 @@ function EditTradeModal({ isOpen, onClose, trade, onSubmit }) {
     const file = e.dataTransfer.files[0];
     if (file) {
       setUploading(true);
-      const base64 = await fileToBase64(file);
-      setFormData(prev => ({ ...prev, image: base64 }));
-      setImagePreview(base64);
+      try {
+        const fileRef = ref(storage, `trade-images/${Date.now()}-${file.name}`);
+        await uploadBytes(fileRef, file);
+        const url = await getDownloadURL(fileRef);
+        setFormData(prev => ({ ...prev, image: url }));
+        setImagePreview(url);
+      } catch (err) {
+        alert('Failed to upload image. Please try again.');
+      }
       setUploading(false);
     }
   };

@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth } from '../firebase/config';
+import { auth, storage } from '../firebase/config';
 import LoginRequired from './LoginRequired';
 import '../style/CreateTradeModal.css';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 const DIFFICULTY_OPTIONS = [
   'Beginner-friendly',
@@ -35,7 +36,6 @@ function CreateTradeModal({ isOpen, onClose, onSubmit, onLoginClick, userProfile
   const [imagePreview, setImagePreview] = useState('');
   const [uploading, setUploading] = useState(false);
   const [imageError, setImageError] = useState('');
-  const MAX_FILE_SIZE = 500 * 1024; // 500KB in bytes
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -56,35 +56,21 @@ function CreateTradeModal({ isOpen, onClose, onSubmit, onLoginClick, userProfile
     setFormData(prev => ({ ...prev, tags: prev.tags.filter(t => t !== tag) }));
   };
 
-  const validateImage = (file) => {
-    setImageError('');
-    if (file.size > MAX_FILE_SIZE) {
-      setImageError('Image size must be less than 500KB. Please choose a smaller image or compress it.');
-      return false;
-    }
-    return true;
-  };
-
-  const fileToBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = error => reject(error);
-    });
-  };
-
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      if (!validateImage(file)) {
-        e.target.value = ''; // Reset the file input
-        return;
-      }
       setUploading(true);
-      const base64 = await fileToBase64(file);
-      setFormData(prev => ({ ...prev, image: base64 }));
-      setImagePreview(base64);
+      setImageError('');
+      try {
+        // Upload to Firebase Storage
+        const fileRef = ref(storage, `trade-images/${Date.now()}-${file.name}`);
+        await uploadBytes(fileRef, file);
+        const url = await getDownloadURL(fileRef);
+        setFormData(prev => ({ ...prev, image: url }));
+        setImagePreview(url);
+      } catch (err) {
+        setImageError('Failed to upload image. Please try again.');
+      }
       setUploading(false);
     }
   };
@@ -93,13 +79,17 @@ function CreateTradeModal({ isOpen, onClose, onSubmit, onLoginClick, userProfile
     e.preventDefault();
     const file = e.dataTransfer.files[0];
     if (file) {
-      if (!validateImage(file)) {
-        return;
-      }
       setUploading(true);
-      const base64 = await fileToBase64(file);
-      setFormData(prev => ({ ...prev, image: base64 }));
-      setImagePreview(base64);
+      setImageError('');
+      try {
+        const fileRef = ref(storage, `trade-images/${Date.now()}-${file.name}`);
+        await uploadBytes(fileRef, file);
+        const url = await getDownloadURL(fileRef);
+        setFormData(prev => ({ ...prev, image: url }));
+        setImagePreview(url);
+      } catch (err) {
+        setImageError('Failed to upload image. Please try again.');
+      }
       setUploading(false);
     }
   };
@@ -111,6 +101,18 @@ function CreateTradeModal({ isOpen, onClose, onSubmit, onLoginClick, userProfile
   const handleSubmit = async (e) => {
     e.preventDefault();
     setUploading(true);
+    // Check for at least one tag
+    if (!formData.tags || formData.tags.length === 0) {
+      setImageError('Please add at least one tag.');
+      setUploading(false);
+      return;
+    }
+    // Check for image
+    if (!formData.image) {
+      setImageError('Please upload an image.');
+      setUploading(false);
+      return;
+    }
     const tradeData = {
       ...formData,
       creatorUid: user?.uid,
@@ -185,7 +187,6 @@ function CreateTradeModal({ isOpen, onClose, onSubmit, onLoginClick, userProfile
                       <>
                         <span role="img" aria-label="upload">📁</span> 
                         <div>DRAG FILES TO UPLOAD</div>
-                        <div className="file-size-hint">Max size: 500KB</div>
                       </>
                     )}
                   </label>
