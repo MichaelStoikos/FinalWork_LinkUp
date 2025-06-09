@@ -16,7 +16,7 @@
 
 @font-face {
   font-family: 'TT font';
-  src: url('./assets/fonts/TTTrailersTrial-Regular.ttf') format('ttf');
+  src: url('../assets/fonts/TT Trailers Trial-Regular.ttf') format('ttf');
   font-weight: normal;
   font-style: normal;
 }
