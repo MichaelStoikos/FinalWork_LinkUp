@@ -45,6 +45,7 @@ function DeliverablesPanel({ tradeId, userId, partnerId }) {
   const [isDeliverModalOpen, setDeliverModalOpen] = useState(false);
   const [modalImage, setModalImage] = useState(null);
   const [modalVideo, setModalVideo] = useState(null);
+  const [modalIsPreview, setModalIsPreview] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
 
   // Fetch deliverables
@@ -123,7 +124,10 @@ function DeliverablesPanel({ tradeId, userId, partnerId }) {
     if (file.fileType && file.fileType.startsWith('image/')) {
       if (isPreview) {
         // Watermarked preview, disable right-click
-        return <WatermarkedImage url={file.fileUrl} alt={file.fileName} style={{ maxWidth: 200, cursor: 'zoom-in' }} onClick={() => setModalImage(file.fileUrl)} />;
+        return <WatermarkedImage url={file.fileUrl} alt={file.fileName} style={{ maxWidth: 200, cursor: 'zoom-in' }} onClick={() => {
+          setModalImage(file.fileUrl);
+          setModalIsPreview(true);
+        }} />;
       } else {
         // Final: show original image, enable download
         return (
@@ -132,7 +136,10 @@ function DeliverablesPanel({ tradeId, userId, partnerId }) {
               src={file.fileUrl}
               alt={file.fileName}
               style={{ maxWidth: 200, borderRadius: 8, cursor: 'zoom-in' }}
-              onClick={() => setModalImage(file.fileUrl)}
+              onClick={() => {
+                setModalImage(file.fileUrl);
+                setModalIsPreview(false);
+              }}
             />
             <a href={file.fileUrl} download={file.fileName} style={{ marginTop: 4, color: '#7b61ff', textDecoration: 'underline', fontSize: '0.95rem' }}>Download</a>
           </div>
@@ -152,7 +159,10 @@ function DeliverablesPanel({ tradeId, userId, partnerId }) {
                   controlsList="nodownload nofullscreen"
                   style={{ maxWidth: 200, borderRadius: 12, cursor: 'zoom-in' }}
                   onContextMenu={e => e.preventDefault()}
-                  onClick={() => setModalVideo(file.fileUrl)}
+                  onClick={() => {
+                    setModalVideo(file.fileUrl);
+                    setModalIsPreview(true);
+                  }}
                 />
               </Watermark>
             </div>
@@ -167,7 +177,10 @@ function DeliverablesPanel({ tradeId, userId, partnerId }) {
               src={file.fileUrl}
               controls
               style={{ maxWidth: 200, borderRadius: 12, cursor: 'zoom-in' }}
-              onClick={() => setModalVideo(file.fileUrl)}
+              onClick={() => {
+                setModalVideo(file.fileUrl);
+                setModalIsPreview(false);
+              }}
             />
             <a href={file.fileUrl} download={file.fileName} style={{ marginTop: 4, color: '#7b61ff', textDecoration: 'underline', fontSize: '0.95rem' }}>Download</a>
           </div>
@@ -277,34 +290,60 @@ function DeliverablesPanel({ tradeId, userId, partnerId }) {
       </div>
       {/* Image Modal */}
       {modalImage && createPortal(
-        <div className="image-modal-overlay" onClick={() => setModalImage(null)}>
+        <div className="image-modal-overlay" onClick={() => {
+          setModalImage(null);
+          setModalIsPreview(false);
+        }}>
           <div className="image-modal-content" onClick={e => e.stopPropagation()}>
-            <button className="image-modal-close" onClick={() => setModalImage(null)}>&times;</button>
-            <WatermarkedImage url={modalImage} alt="Preview" style={{ maxWidth: '90vw', maxHeight: '80vh', borderRadius: 12 }} />
+            <button className="image-modal-close" onClick={() => {
+              setModalImage(null);
+              setModalIsPreview(false);
+            }}>&times;</button>
+            {modalIsPreview ? (
+              <WatermarkedImage url={modalImage} alt="Preview" style={{ maxWidth: '90vw', maxHeight: '80vh', borderRadius: 12 }} />
+            ) : (
+              <img
+                src={modalImage}
+                alt="Final Deliverable"
+                style={{ maxWidth: '90vw', maxHeight: '80vh', borderRadius: 12 }}
+              />
+            )}
           </div>
         </div>,
         document.body
       )}
-      {/* Video Modal with Watermark */}
+      {/* Video Modal */}
       <Modal
         open={!!modalVideo}
-        onCancel={() => setModalVideo(null)}
+        onCancel={() => {
+          setModalVideo(null);
+          setModalIsPreview(false);
+        }}
         footer={null}
         centered
         width={1550}
         styles={{ body: { padding: 0, background: 'transparent', display: 'flex', justifyContent: 'center', alignItems: 'center' } }}
         destroyOnHidden
       >
-        <Watermark content="PREVIEW">
+        {modalIsPreview ? (
+          <Watermark content="PREVIEW">
+            <video
+              src={modalVideo}
+              controls
+              controlsList="nodownload nofullscreen"
+              style={{ maxWidth: '98vw', maxHeight: '90vh', borderRadius: 12, background: '#000' }}
+              onContextMenu={e => e.preventDefault()}
+              autoPlay
+            />
+          </Watermark>
+        ) : (
           <video
             src={modalVideo}
             controls
-            controlsList="nodownload nofullscreen"
             style={{ maxWidth: '98vw', maxHeight: '90vh', borderRadius: 12, background: '#000' }}
-            onContextMenu={e => e.preventDefault()}
             autoPlay
           />
-        </Watermark>
+        )}
       </Modal>
     </>
   );
