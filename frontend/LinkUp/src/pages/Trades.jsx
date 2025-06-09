@@ -7,7 +7,7 @@ import { doc, getDoc } from 'firebase/firestore'
 import '../style/Trades.css'
 import { Helmet } from 'react-helmet';
 import React from 'react';
-import { motion } from 'framer-motion';
+import FadeInWrapper from '../components/FadeInWrapper';
 
 function Trades() {
   const navigate = useNavigate();
@@ -118,12 +118,7 @@ function Trades() {
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0.5 }}
-      animate={{ opacity: 2 }}
-      exit={{ opacity: 0.3 }}
-      transition={{ duration: 0.5 }}
-    >
+    <>
       <Helmet>
         <link
           rel="preload"
@@ -133,6 +128,7 @@ function Trades() {
       </Helmet>
       <div className="trades-page">
         <video autoPlay loop muted playsInline src="https://firebasestorage.googleapis.com/v0/b/linkup-c14d5.firebasestorage.app/o/waveBG2.mp4?alt=media&token=f41d68c3-7e04-47ac-a5fd-20c326f3c9ae" alt="wave" />
+        <FadeInWrapper>
         <div className="trades-title">
           <h1>Swaps</h1>
         </div>
@@ -187,7 +183,7 @@ function Trades() {
             })
           )}
         </div>
-
+        </FadeInWrapper>
         {isModalOpen && (
           <CreateTradeModal
             isOpen={isModalOpen}
@@ -202,7 +198,7 @@ function Trades() {
           onClose={() => setIsAuthModalOpen(false)} 
         />
       </div>
-    </motion.div>
+    </>
   );
 }
 

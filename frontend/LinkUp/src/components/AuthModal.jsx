@@ -65,7 +65,7 @@ function AuthModal({ isOpen, onClose }) {
                     email: email,
                     nickname: nickname,
                     createdAt: new Date().toISOString(),
-                    // Add other fields with default values
+                    photoBase64: '/User.jpg',
                     tags: [],
                     availability: [],
                     bio: '',

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth, storage } from '../firebase/config';
 import LoginRequired from './LoginRequired';
+import LoginRequiredOverlay from './LoginRequiredOverlay';
 import '../style/CreateTradeModal.css';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
@@ -137,12 +138,7 @@ function CreateTradeModal({ isOpen, onClose, onSubmit, onLoginClick, userProfile
 
   if (!user) {
     return (
-      <div className="modal-overlay">
-        <div className="modal-content">
-          <button className="close-button" onClick={onClose}>&times;</button>
-          <LoginRequired onLoginClick={onLoginClick} />
-        </div>
-      </div>
+      <LoginRequiredOverlay onClose={onClose} />
     );
   }
 

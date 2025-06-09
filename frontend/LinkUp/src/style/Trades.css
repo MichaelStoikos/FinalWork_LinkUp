@@ -50,12 +50,6 @@
   background-color: #0056b3;
 }
 
-.trades-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 2rem;
-}
-
 /* Custom Trade Card Styles */
 .custom-trade-card {
   background: #fff;
@@ -63,7 +57,7 @@
   box-shadow: 6px 6px 15px rgba(0, 0, 0, 0.13);
   padding: 0 0 1.5rem 0;
   display: flex;
-  width: 25%;
+  width: 30%;
   flex-direction: column;
   align-items: center;
   min-height: 420px;
