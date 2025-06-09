@@ -1,0 +1,143 @@
+.tutorial-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2rem 1rem;
+    margin-top: -10rem;
+    overflow: hidden;
+  }
+
+  .tutorial-container video{
+    position: absolute;
+    z-index: -15;
+    width: 150%;
+    height: 75%;
+    top: -2px;
+    left: 0px;
+    object-fit: cover;
+  }
+
+  .tutorial-container h1 {
+    text-align: center;
+    color: #fff;
+    margin-top: 10rem;
+  }
+  
+  .tutorial-swiper {
+    width: 100%;
+    max-width: 1100px;
+    margin-bottom: 2rem;
+  }
+  
+  .tutorial-slide {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    gap: 3rem;
+  }
+  
+  .tutorial-slide-img,
+  .tutorial-slide-text {
+    flex: 1;
+  }
+  
+  .tutorial-slide-img img{
+    width: 70%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .tutorial-slide-text {
+    padding: 0 1rem;
+  }
+  
+  .tutorial-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 700px;
+  }
+  
+  .tutorial-controls button {
+    background: #fff;
+    color: #111;
+    border: 1.5px solid #bbb;
+    border-radius: 999px;
+    padding: 0.6rem 1.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: background 0.2s, border-color 0.2s;
+  }
+
+
+  
+  .tutorial-controls button:hover {
+    background: #f5f5f5;
+    border-color: #888;
+  }
+  
+  .swiper-pagination-bullets {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .swiper-pagination-bullet {
+    width: 12px;
+    height: 12px;
+    background: #bbb;
+    opacity: 1;
+    border: 1.5px solid #bbb;
+    border-radius: 50%;
+    transition: background 0.2s;
+  }
+
+  .custom-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin: 0 1rem;
+    flex-grow: 1;
+  }
+  
+  .swiper-pagination-bullet {
+    width: 12px;
+    height: 12px;
+    background: #bbb;
+    border: 1.5px solid #bbb;
+    border-radius: 50%;
+    opacity: 1;
+    transition: background 0.2s ease;
+  }
+  
+  .swiper-pagination-bullet-active {
+    background: #444;
+    border-color: #444;
+  }
+  
+  /* Responsive */
+  @media (max-width: 900px) {
+    .tutorial-slide {
+      flex-direction: column;
+      text-align: center;
+    }
+  
+    .tutorial-placeholder {
+      max-width: 100%;
+      width: 100%;
+    }
+  
+    .tutorial-slide-text {
+      padding: 1rem 0;
+    }
+  
+    .tutorial-controls {
+      flex-direction: column;
+      gap: 1rem;
+    }
+  }
+  
