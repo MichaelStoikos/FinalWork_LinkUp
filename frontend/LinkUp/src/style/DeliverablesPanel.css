@@ -174,3 +174,24 @@
 .image-modal-close:hover {
   background: #5a43c6;
 }
+
+/* 15-inch laptops (1440px–1535px) */
+@media (min-width: 1440px) and (max-width: 1535px) {
+  .deliverables-panel { max-width: 46rem; }
+  .deliverables-panel h3 { font-size: 1.2rem; }
+  .deliver-work-btn { font-size: 1.1rem; height: 2.7rem; }
+}
+
+/* 16-inch laptops (1536px–1599px) */
+@media (min-width: 1536px) and (max-width: 1599px) {
+  .deliverables-panel { max-width: 50rem; }
+  .deliverables-panel h3 { font-size: 1.3rem; }
+  .deliver-work-btn { font-size: 1.15rem; height: 2.8rem; }
+}
+
+/* 17-inch laptops (1600px–1919px) */
+@media (min-width: 1600px) and (max-width: 1919px) {
+  .deliverables-panel { max-width: 54rem; }
+  .deliverables-panel h3 { font-size: 1.4rem; }
+  .deliver-work-btn { font-size: 1.2rem; height: 3rem; }
+}

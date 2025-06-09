@@ -211,3 +211,24 @@
   }
 }
 
+/* 15-inch laptops (1440px–1535px) */
+@media (min-width: 1440px) and (max-width: 1535px) {
+  .auth-modal { width: 32rem; }
+  .auth-modal h2 { font-size: 1.9rem; }
+  .google-auth-button, .submit-button { font-size: 1.1rem; height: 2.7rem; }
+}
+
+/* 16-inch laptops (1536px–1599px) */
+@media (min-width: 1536px) and (max-width: 1599px) {
+  .auth-modal { width: 36rem; }
+  .auth-modal h2 { font-size: 2.1rem; }
+  .google-auth-button, .submit-button { font-size: 1.15rem; height: 2.8rem; }
+}
+
+/* 17-inch laptops (1600px–1919px) */
+@media (min-width: 1600px) and (max-width: 1919px) {
+  .auth-modal { width: 40rem; }
+  .auth-modal h2 { font-size: 2.3rem; }
+  .google-auth-button, .submit-button { font-size: 1.2rem; height: 3rem; }
+}
+

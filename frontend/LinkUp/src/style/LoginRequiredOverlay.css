@@ -117,4 +117,25 @@ div.login-required-content {
     font-size: 1.2rem;
     padding: 0.2rem;
   }
+}
+
+/* 15-inch laptops (1440px–1535px) */
+@media (min-width: 1440px) and (max-width: 1535px) {
+  div.login-required-content { width: 28rem; }
+  .login-required-content h2 { font-size: 1.2rem; }
+  .login-required-content .login-link { font-size: 1.1rem; height: 2.7rem; }
+}
+
+/* 16-inch laptops (1536px–1599px) */
+@media (min-width: 1536px) and (max-width: 1599px) {
+  div.login-required-content { width: 32rem; }
+  .login-required-content h2 { font-size: 1.3rem; }
+  .login-required-content .login-link { font-size: 1.15rem; height: 2.8rem; }
+}
+
+/* 17-inch laptops (1600px–1919px) */
+@media (min-width: 1600px) and (max-width: 1919px) {
+  div.login-required-content { width: 36rem; }
+  .login-required-content h2 { font-size: 1.4rem; }
+  .login-required-content .login-link { font-size: 1.2rem; height: 3rem; }
 } 

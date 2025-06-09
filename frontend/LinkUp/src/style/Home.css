@@ -290,3 +290,33 @@
     margin: 0.5rem 0 !important;
   }
 }
+
+/* 15-inch laptops (1440px–1535px) */
+@media (min-width: 1440px) and (max-width: 1535px) {
+  h1 { font-size: 4.5rem; }
+  h2 { font-size: 1.9rem; }
+  .card { width: 22rem; }
+  .hero-left { margin-top: 15rem; }
+  .ButtonCustom { width: 8rem; }
+  .skill-card { width: 20rem; margin-left: 1rem; }
+}
+
+/* 16-inch laptops (1536px–1599px) */
+@media (min-width: 1536px) and (max-width: 1599px) {
+  h1 { font-size: 5rem; }
+  h2 { font-size: 1.9rem; }
+  .card { width: 22rem; }
+  .hero-left { margin-top: 15rem; }
+  .ButtonCustom { width: 8rem; }
+  .skill-card { width: 20rem; margin-left: 2.5rem; }
+}
+
+/* 17-inch laptops (1600px–1919px) */
+@media (min-width: 1600px) and (max-width: 1919px) {
+  h1 { font-size: 5rem; }
+  h2 { font-size: 1.9rem; }
+  .card { width: 22rem; }
+  .hero-left { margin-top: 15rem; }
+  .ButtonCustom { width: 10rem; }
+  .skill-card { width: 21rem; margin-left: 2.8rem; }
+}
