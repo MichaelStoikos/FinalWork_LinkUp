@@ -19,7 +19,7 @@ function App() {
       <Navigation />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/Swaps" element={<Trades />} />
+        <Route path="/swaps" element={<Trades />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/my-trades" element={<MyTrades />} />
         <Route path="/trade/:tradeId" element={<TradeDetails />} />

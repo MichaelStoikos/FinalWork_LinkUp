@@ -61,7 +61,7 @@ function Navigation() {
             </div>
             <div className="nav-links">
                 <Link to="/">Home</Link>
-                <Link to="/trades" className="nav-link">Swaps</Link>
+                <Link to="/swaps" className="nav-link">Swaps</Link>
                 {user && (
                   <Link to="/messages" className="nav-link">Messages</Link>
                 )}
