@@ -9,6 +9,7 @@ import { Github, Linkedin, Dribbble, Globe } from 'lucide-react';
 import { Helmet } from 'react-helmet';
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useToast } from '../components/ToastContext';
 
 
 function Profile() {
@@ -20,6 +21,7 @@ function Profile() {
     const [uploadingImage, setUploadingImage] = useState(false);
     const fileInputRef = useRef(null);
     const navigate = useNavigate();
+    const { showToast } = useToast();
 
     // Form state
     const [formData, setFormData] = useState({
@@ -152,6 +154,7 @@ function Profile() {
             }));
             setIsEditing(false);
             setError(null);
+            showToast('Profile updated!', 'success');
             window.location.reload(); // Force refresh to update nav profile picture
         } catch (err) {
             setError('Error updating profile: ' + err.message);

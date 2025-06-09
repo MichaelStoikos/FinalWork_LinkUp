@@ -15,7 +15,7 @@
 }
 
 @font-face {
-  font-family: 'TT Trailers Trial';
+  font-family: 'TT font';
   src: url('../assets/fonts/TTTrailersTrial-Regular.ttf') format('ttf');
   font-weight: normal;
   font-style: normal;
@@ -31,7 +31,7 @@ a:hover {
 }
 
 h1 {
-  font-family: 'TT Trailers Trial', sans-serif;
+  font-family: 'TT font', sans-serif;
   font-size: 7rem;
 }
 

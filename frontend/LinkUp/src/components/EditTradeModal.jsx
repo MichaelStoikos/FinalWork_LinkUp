@@ -3,6 +3,7 @@ import { db, storage } from '../firebase/config';
 import { doc, updateDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import '../style/CreateTradeModal.css';
+import { useToast } from './ToastContext';
 
 const DIFFICULTY_OPTIONS = [
   'Beginner-friendly',
@@ -33,6 +34,7 @@ function EditTradeModal({ isOpen, onClose, trade, onSubmit }) {
   const [tagInput, setTagInput] = useState('');
   const [imagePreview, setImagePreview] = useState(trade?.image || '');
   const [uploading, setUploading] = useState(false);
+  const { showToast } = useToast();
 
   // Update form when trade changes
   React.useEffect(() => {
@@ -114,6 +116,7 @@ function EditTradeModal({ isOpen, onClose, trade, onSubmit }) {
       const tradeRef = doc(db, 'trades', trade.id);
       await updateDoc(tradeRef, formData);
       onSubmit({ ...trade, ...formData });
+      showToast('Trade updated!', 'success');
       onClose();
     } catch (err) {
       alert('Error updating trade: ' + err.message);

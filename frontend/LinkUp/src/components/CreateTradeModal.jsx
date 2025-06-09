@@ -5,6 +5,7 @@ import LoginRequired from './LoginRequired';
 import LoginRequiredOverlay from './LoginRequiredOverlay';
 import '../style/CreateTradeModal.css';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { useToast } from './ToastContext';
 
 const DIFFICULTY_OPTIONS = [
   'Beginner-friendly',
@@ -37,6 +38,7 @@ function CreateTradeModal({ isOpen, onClose, onSubmit, onLoginClick, userProfile
   const [imagePreview, setImagePreview] = useState('');
   const [uploading, setUploading] = useState(false);
   const [imageError, setImageError] = useState('');
+  const { showToast } = useToast();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -121,6 +123,7 @@ function CreateTradeModal({ isOpen, onClose, onSubmit, onLoginClick, userProfile
       createdAt: new Date().toISOString(),
     };
     onSubmit(tradeData);
+    showToast('Trade created!', 'success');
     setUploading(false);
     setFormData({
       name: '',

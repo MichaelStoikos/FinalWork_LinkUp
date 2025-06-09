@@ -5,6 +5,7 @@ import { auth, googleProvider, db } from '../firebase/config';
 import { signInWithPopup } from 'firebase/auth';
 import '../style/AuthModal.css';
 import { Eye, EyeOff } from 'lucide-react';
+import { useToast } from './ToastContext';
 
 function AuthModal({ isOpen, onClose }) {
     const [isLogin, setIsLogin] = useState(true);
@@ -13,6 +14,7 @@ function AuthModal({ isOpen, onClose }) {
     const [nickname, setNickname] = useState('');
     const [error, setError] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+    const { showToast } = useToast();
 
     const handleGoogleSignIn = async () => {
         try {
@@ -40,6 +42,7 @@ function AuthModal({ isOpen, onClose }) {
                 endorsementCount: 0
             }, { merge: true });
             onClose();
+            showToast('Logged in successfully!', 'success');
         } catch (error) {
             setError(error.message);
         }
@@ -53,6 +56,8 @@ function AuthModal({ isOpen, onClose }) {
             if (isLogin) {
                 // Login
                 await signInWithEmailAndPassword(auth, email, password);
+                onClose();
+                showToast('Logged in successfully!', 'success');
             } else {
                 // Register
                 if (!nickname) {
@@ -79,8 +84,9 @@ function AuthModal({ isOpen, onClose }) {
                     endorsements: [],
                     endorsementCount: 0
                 });
+                onClose();
+                showToast('Account created successfully!', 'success');
             }
-            onClose();
         } catch (error) {
             setError(error.message);
         }

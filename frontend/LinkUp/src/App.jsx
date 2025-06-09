@@ -10,14 +10,16 @@ import AccountDetails from './pages/AccountDetails';
 import MessagesPage from './pages/MessagesPage';
 import './style/index.css';
 import './style/DeliverablesPanel.css';
+import { ToastProvider } from './components/ToastContext';
+import './style/Toast.css';
 
 function App() {
   return (
-    <>
+    <ToastProvider>
       <Navigation />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/Trades" element={<Trades />} />
+        <Route path="/Swaps" element={<Trades />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/my-trades" element={<MyTrades />} />
         <Route path="/trade/:tradeId" element={<TradeDetails />} />
@@ -25,7 +27,7 @@ function App() {
         <Route path="/messages" element={<MessagesPage />} />
         <Route path="/messages/:chatId" element={<MessagesPage />} />
       </Routes>
-    </>
+    </ToastProvider>
   );
 }
 
