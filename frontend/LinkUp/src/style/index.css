@@ -351,3 +351,23 @@ body {
     gap: 0.5rem !important;
   }
 }
+
+/* Laptop styles (smaller than desktop, larger than tablet) */
+@media (min-width: 1024px) and (max-width: 1439px) {
+  h1 {
+    font-size: 3.2rem;
+  }
+  h2 {
+    font-size: 1.7rem;
+  }
+  h3 {
+    font-size: 1.1rem;
+  }
+  .ButtonCustom, .ButtonCustom2, .ButtonCustom3 {
+    font-size: 1rem;
+    width: 12rem;
+    min-width: 120px;
+    height: 2.5rem;
+    padding: 0.5rem 1rem;
+  }
+}
