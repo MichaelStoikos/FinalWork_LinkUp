@@ -4,6 +4,7 @@ import { doc, setDoc } from 'firebase/firestore';
 import { auth, googleProvider, db } from '../firebase/config';
 import { signInWithPopup } from 'firebase/auth';
 import '../style/AuthModal.css';
+import { Eye, EyeOff } from 'lucide-react';
 
 function AuthModal({ isOpen, onClose }) {
     const [isLogin, setIsLogin] = useState(true);
@@ -11,6 +12,7 @@ function AuthModal({ isOpen, onClose }) {
     const [password, setPassword] = useState('');
     const [nickname, setNickname] = useState('');
     const [error, setError] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleGoogleSignIn = async () => {
         try {
@@ -138,16 +140,40 @@ function AuthModal({ isOpen, onClose }) {
                         />
                     </div>
                     
-                    <div className="form-group">
+                    <div className="form-group" style={{ position: 'relative' }}>
                         <label htmlFor="password"><h4>Password</h4></label>
                         <input
-                            type="password"
+                            type={showPassword ? "text" : "password"}
                             id="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
                             placeholder="Enter your password"
                         />
+                        <button
+                            type="button"
+                            className="show-password-btn"
+                            onClick={() => setShowPassword((v) => !v)}
+                            tabIndex={-1}
+                            style={{
+                              position: "absolute",
+                              right: "1.2rem",
+                              top: "0.5rem",
+                              height: '100%',
+                              background: "none",
+                              border: "none",
+                              cursor: "pointer",
+                              color: '#7B68EE',
+                              fontWeight: 600,
+                              padding: 0,
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              zIndex: 2
+                            }}
+                        >
+                          {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                        </button>
                     </div>
                     
                     <button type="submit" className="ButtonCustom3">
