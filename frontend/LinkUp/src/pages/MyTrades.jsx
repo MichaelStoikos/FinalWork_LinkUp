@@ -368,6 +368,11 @@ function MyTrades() {
                           requested collaboration for <strong>{request.tradeName}</strong>
                         </span>
                       </div>
+                      {request.counterpartMessage && (
+                        <div className="request-counterpart-message">
+                          <strong>Requested Counterpart:</strong> {request.counterpartMessage}
+                        </div>
+                      )}
                       <div className="request-actions">
                         <button 
                           className="accept-btn"

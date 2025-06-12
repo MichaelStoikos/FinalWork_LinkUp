@@ -262,14 +262,20 @@ function Profile() {
                                     </div>
                                     <div className="form-group">
                                         <label htmlFor="specialisation">Specialisation</label>
-                                        <input
-                                            type="text"
+                                        <select
                                             id="specialisation"
                                             name="specialisation"
                                             value={formData.specialisation}
                                             onChange={handleInputChange}
-                                            placeholder="Your specialisation"
-                                        />
+                                        >
+                                            <option value="">Select your specialisation</option>
+                                            <option value="Web Development">Web Development</option>
+                                            <option value="Motion Graphics">Motion Graphics</option>
+                                            <option value="Web Design">Web Design</option>
+                                            <option value="Branding">Branding</option>
+                                            <option value="App Development">App Development</option>
+                                            <option value="3D Modeling">3D Modeling</option>
+                                        </select>
                                     </div>
                                     <div className="form-group">
                                         <label>Social Links</label>

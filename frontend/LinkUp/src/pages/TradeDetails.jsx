@@ -7,6 +7,7 @@ import { Helmet } from 'react-helmet';
 import React from 'react';
 import { motion } from 'framer-motion';
 import DeliverablesPanel from '../components/DeliverablesPanel';
+import RequestCollabPopup from '../components/RequestCollabPopup';
 
 function TradeDetails() {
   const { tradeId } = useParams();
@@ -18,6 +19,8 @@ function TradeDetails() {
   const [isOwner, setIsOwner] = useState(false);
   const [hasRequested, setHasRequested] = useState(false);
   const [requestLoading, setRequestLoading] = useState(false);
+  const [isRequestPopupOpen, setIsRequestPopupOpen] = useState(false);
+  const [requestMessage, setRequestMessage] = useState('');
 
   useEffect(() => {
     const fetchTradeDetails = async () => {
@@ -74,15 +77,22 @@ function TradeDetails() {
     fetchTradeDetails();
   }, [tradeId]);
 
-  const handleRequestCollaboration = async () => {
+  const handleRequestCollabPopupOpen = () => {
+    setIsRequestPopupOpen(true);
+  };
+
+  const handleRequestCollabPopupClose = () => {
+    setIsRequestPopupOpen(false);
+  };
+
+  const handleRequestCollabSubmit = async (message) => {
     if (!auth.currentUser) {
       console.log('No user logged in, cannot send collaboration request');
       return;
     }
-
     try {
       setRequestLoading(true);
-      console.log('Creating collaboration request...');
+      setIsRequestPopupOpen(false);
       const requestsRef = collection(db, 'collaborationRequests');
       const requestDoc = await addDoc(requestsRef, {
         tradeId,
@@ -91,12 +101,10 @@ function TradeDetails() {
         requesterNickname: auth.currentUser.displayName || 'Anonymous',
         creatorUid: trade.creatorUid,
         status: 'pending',
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
+        counterpartMessage: message
       });
-      console.log('Collaboration request created:', requestDoc.id);
-
       // Create notification for the trade creator
-      console.log('Creating notification for trade creator:', trade.creatorUid);
       const notificationsRef = collection(db, 'notifications');
       const notificationData = {
         userId: trade.creatorUid,
@@ -107,10 +115,7 @@ function TradeDetails() {
         read: false,
         createdAt: serverTimestamp()
       };
-      console.log('Notification data:', notificationData);
-      const notificationDoc = await addDoc(notificationsRef, notificationData);
-      console.log('Notification created:', notificationDoc.id);
-
+      await addDoc(notificationsRef, notificationData);
       setHasRequested(true);
     } catch (err) {
       console.error("Error in collaboration request process:", err);
@@ -201,12 +206,18 @@ function TradeDetails() {
                 ) : (
                   <button
                     className="request-collaboration-btn"
-                    onClick={handleRequestCollaboration}
+                    onClick={handleRequestCollabPopupOpen}
                     disabled={requestLoading}
                   >
                     {requestLoading ? 'Sending Request...' : 'Request Collaboration'}
                   </button>
                 )}
+                <RequestCollabPopup
+                  isOpen={isRequestPopupOpen}
+                  onClose={handleRequestCollabPopupClose}
+                  onSubmit={handleRequestCollabSubmit}
+                  loading={requestLoading}
+                />
               </div>
             )}
 
