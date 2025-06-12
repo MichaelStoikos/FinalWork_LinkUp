@@ -4,6 +4,20 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import '../style/DeliverWorkModal.css';
 
+/**
+ * DeliverWorkModal component for uploading and submitting deliverables in a trade collaboration.
+ * Handles both preview and final deliverables with file uploads and link submissions.
+ * Supports multiple files and links with descriptions for each deliverable type.
+ * 
+ * @param {Object} props - Component props
+ * @param {string} props.tradeId - The unique identifier for the trade/collaboration
+ * @param {string} props.userId - The current user's unique identifier
+ * @param {boolean} props.isOpen - Whether the modal is currently open
+ * @param {Function} props.onClose - Callback function to close the modal
+ * @param {Function} props.onDelivery - Callback function called after successful delivery
+ * @param {string} props.partnerId - The partner's unique identifier for notifications
+ * @returns {JSX.Element|null} The rendered modal component or null if not open
+ */
 function DeliverWorkModal({ tradeId, userId, isOpen, onClose, onDelivery, partnerId }) {
   // State for preview deliverables
   const [previewFiles, setPreviewFiles] = useState([]);
@@ -20,26 +34,78 @@ function DeliverWorkModal({ tradeId, userId, isOpen, onClose, onDelivery, partne
 
   if (!isOpen) return null;
 
-  // Handlers for preview
+  /**
+   * Updates the preview files state with selected files.
+   * 
+   * @param {Event} e - The file input change event
+   */
   const handlePreviewFileChange = (e) => setPreviewFiles([...e.target.files]);
+
+  /**
+   * Updates a specific field in a preview link at the given index.
+   * 
+   * @param {number} idx - The index of the link to update
+   * @param {string} field - The field name to update ('url' or 'description')
+   * @param {string} value - The new value for the field
+   */
   const handlePreviewLinkChange = (idx, field, value) => {
     const newLinks = [...previewLinks];
     newLinks[idx][field] = value;
     setPreviewLinks(newLinks);
   };
+
+  /**
+   * Adds a new empty link field to the preview links array.
+   */
   const addPreviewLinkField = () => setPreviewLinks([...previewLinks, { url: '', description: '' }]);
+
+  /**
+   * Removes a link field from the preview links array at the specified index.
+   * 
+   * @param {number} idx - The index of the link to remove
+   */
   const removePreviewLinkField = (idx) => setPreviewLinks(previewLinks.filter((_, i) => i !== idx));
 
-  // Handlers for final
+  /**
+   * Updates the final files state with selected files.
+   * 
+   * @param {Event} e - The file input change event
+   */
   const handleFinalFileChange = (e) => setFinalFiles([...e.target.files]);
+
+  /**
+   * Updates a specific field in a final link at the given index.
+   * 
+   * @param {number} idx - The index of the link to update
+   * @param {string} field - The field name to update ('url' or 'description')
+   * @param {string} value - The new value for the field
+   */
   const handleFinalLinkChange = (idx, field, value) => {
     const newLinks = [...finalLinks];
     newLinks[idx][field] = value;
     setFinalLinks(newLinks);
   };
+
+  /**
+   * Adds a new empty link field to the final links array.
+   */
   const addFinalLinkField = () => setFinalLinks([...finalLinks, { url: '', description: '' }]);
+
+  /**
+   * Removes a link field from the final links array at the specified index.
+   * 
+   * @param {number} idx - The index of the link to remove
+   */
   const removeFinalLinkField = (idx) => setFinalLinks(finalLinks.filter((_, i) => i !== idx));
 
+  /**
+   * Handles form submission by uploading files and saving links to Firebase.
+   * Processes both preview and final deliverables, sends notifications, and resets form state.
+   * 
+   * @async
+   * @param {Event} e - The form submit event
+   * @returns {Promise<void>}
+   */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setUploading(true);

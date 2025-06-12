@@ -1,38 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { db } from '../firebase/config';
 import { collection, getDocs, updateDoc, doc, addDoc, serverTimestamp } from 'firebase/firestore';
-import { addWatermarkToImage } from '../utils/watermark';
 import DeliverWorkModal from './DeliverWorkModal';
 import { createPortal } from 'react-dom';
 import { Watermark, Modal } from 'antd';
 import { auth } from '../firebase/config';
 
-// Move WatermarkedImage outside DeliverablesPanel to avoid flicker
-const WatermarkedImage = ({ url, alt, style, onClick }) => {
-  const [watermarkedUrl, setWatermarkedUrl] = useState(null);
-  useEffect(() => {
-    let isMounted = true;
-    (async () => {
-      const wm = await addWatermarkToImage(url, 'PREVIEW');
-      if (isMounted) setWatermarkedUrl(wm);
-    })();
-    return () => { isMounted = false; };
-  }, [url]);
-  if (!watermarkedUrl) return <div style={{width: 200, height: 120, background: '#eee', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>Loading...</div>;
-  return (
-    <img
-      src={watermarkedUrl}
-      alt={alt}
-      style={style}
-      onContextMenu={e => e.preventDefault()}
-      onClick={onClick}
-      tabIndex={0}
-      role="button"
-      aria-label="Enlarge image preview"
-    />
-  );
-};
-
+/**
+ * DeliverablesPanel component for managing and displaying deliverables in a trade collaboration.
+ * Handles file uploads, previews, acceptance workflows, and modal interactions.
+ * 
+ * @param {Object} props - Component props
+ * @param {string} props.tradeId - The unique identifier for the trade/collaboration
+ * @param {string} props.userId - The current user's unique identifier
+ * @param {string} props.partnerId - The partner's unique identifier
+ * @returns {JSX.Element} The rendered deliverables panel component
+ */
 function DeliverablesPanel({ tradeId, userId, partnerId }) {
   const [myPreviewFiles, setMyPreviewFiles] = useState([]);
   const [myFinalFiles, setMyFinalFiles] = useState([]);
@@ -48,7 +31,13 @@ function DeliverablesPanel({ tradeId, userId, partnerId }) {
   const [modalIsPreview, setModalIsPreview] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
 
-  // Fetch deliverables
+  /**
+   * Fetches all deliverables from Firebase for both users in the trade.
+   * Updates state with preview and final files, and determines acceptance status.
+   * 
+   * @async
+   * @returns {Promise<void>}
+   */
   const fetchFiles = async () => {
     setLoading(true);
     const myPreviewSnap = await getDocs(collection(db, `trades/${tradeId}/deliverables/${userId}/previewFiles`));
@@ -71,12 +60,16 @@ function DeliverablesPanel({ tradeId, userId, partnerId }) {
 
   useEffect(() => {
     fetchFiles();
-    // eslint-disable-next-line
   }, [tradeId, userId, partnerId, refreshKey]);
 
-  // Accept partner's work (mark own deliverables as accepted)
+  /**
+   * Accepts the partner's work by marking all current user's deliverables as accepted.
+   * Sends a notification to the partner and refreshes the file list.
+   * 
+   * @async
+   * @returns {Promise<void>}
+   */
   const handleAccept = async () => {
-    // Mark all my preview and final files as accepted
     const myPreviewSnap = await getDocs(collection(db, `trades/${tradeId}/deliverables/${userId}/previewFiles`));
     const myFinalSnap = await getDocs(collection(db, `trades/${tradeId}/deliverables/${userId}/finalFiles`));
     for (const fileDoc of myPreviewSnap.docs) {
@@ -87,7 +80,7 @@ function DeliverablesPanel({ tradeId, userId, partnerId }) {
     }
     setMyAccepted(true);
     fetchFiles();
-    // Send notification to partner
+    
     if (partnerId) {
       const notificationsRef = collection(db, 'notifications');
       await addDoc(notificationsRef, {
@@ -102,7 +95,13 @@ function DeliverablesPanel({ tradeId, userId, partnerId }) {
     }
   };
 
-  // Request changes (reset accepted flag for own deliverables)
+  /**
+   * Requests changes by resetting the acceptance flag for all current user's deliverables.
+   * Refreshes the file list to reflect the changes.
+   * 
+   * @async
+   * @returns {Promise<void>}
+   */
   const handleRequestChanges = async () => {
     const myPreviewSnap = await getDocs(collection(db, `trades/${tradeId}/deliverables/${userId}/previewFiles`));
     const myFinalSnap = await getDocs(collection(db, `trades/${tradeId}/deliverables/${userId}/finalFiles`));
@@ -116,20 +115,44 @@ function DeliverablesPanel({ tradeId, userId, partnerId }) {
     fetchFiles();
   };
 
-  // Handler to refresh after delivery
+  /**
+   * Triggers a refresh of the deliverables by incrementing the refresh key.
+   * This forces the useEffect to re-run and fetch updated data.
+   */
   const handleDeliveryRefresh = () => setRefreshKey(k => k + 1);
 
-  // Render file preview
+  /**
+   * Renders a file preview based on its type and preview status.
+   * Handles images, videos, PDFs, links, and other file types with appropriate previews.
+   * 
+   * @param {Object} file - The file object containing metadata and URL
+   * @param {boolean} isFull - Whether to show full preview (for PDFs)
+   * @param {boolean} isPreview - Whether this is a preview file (affects watermarking and download restrictions)
+   * @returns {JSX.Element} The rendered file preview component
+   */
   const renderFilePreview = (file, isFull = false, isPreview = false) => {
     if (file.fileType && file.fileType.startsWith('image/')) {
       if (isPreview) {
-        // Watermarked preview, disable right-click
-        return <WatermarkedImage url={file.fileUrl} alt={file.fileName} style={{ maxWidth: 200, cursor: 'zoom-in' }} onClick={() => {
-          setModalImage(file.fileUrl);
-          setModalIsPreview(true);
-        }} />;
+        return (
+          <div style={{ position: 'relative', width: 200, margin: '0 auto' }}>
+            <Watermark content="PREVIEW">
+              <img
+                src={file.fileUrl}
+                alt={file.fileName}
+                style={{ maxWidth: 200, cursor: 'zoom-in' }}
+                onContextMenu={e => e.preventDefault()}
+                onClick={() => {
+                  setModalImage(file.fileUrl);
+                  setModalIsPreview(true);
+                }}
+                tabIndex={0}
+                role="button"
+                aria-label="Enlarge image preview"
+              />
+            </Watermark>
+          </div>
+        );
       } else {
-        // Final: show original image, enable download
         return (
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <img
@@ -148,7 +171,6 @@ function DeliverablesPanel({ tradeId, userId, partnerId }) {
     }
     if (file.fileType && file.fileType.startsWith('video/')) {
       if (isPreview) {
-        // Watermarked preview, disable download
         if (isFull) {
           return (
             <div style={{ position: 'relative', width: 200, margin: '0 auto' }}>
@@ -170,7 +192,6 @@ function DeliverablesPanel({ tradeId, userId, partnerId }) {
         }
         return <div style={{ color: '#b8c1ec' }}>Video file (preview not available)</div>;
       } else {
-        // Final: show original video, enable download
         return (
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <video
@@ -188,7 +209,6 @@ function DeliverablesPanel({ tradeId, userId, partnerId }) {
       }
     }
     if (file.fileType && file.fileType === 'application/pdf') {
-      // PDF preview (show only if full)
       if (isFull) {
         return (
           <a href={file.fileUrl} target="_blank" rel="noopener noreferrer">
@@ -205,7 +225,6 @@ function DeliverablesPanel({ tradeId, userId, partnerId }) {
         </a>
       );
     }
-    // Other file types
     return (
       <div>
         <span role="img" aria-label="file">📎</span> {file.fileName}
@@ -288,7 +307,6 @@ function DeliverablesPanel({ tradeId, userId, partnerId }) {
           </div>
         )}
       </div>
-      {/* Image Modal */}
       {modalImage && createPortal(
         <div className="image-modal-overlay" onClick={() => {
           setModalImage(null);
@@ -300,7 +318,13 @@ function DeliverablesPanel({ tradeId, userId, partnerId }) {
               setModalIsPreview(false);
             }}>&times;</button>
             {modalIsPreview ? (
-              <WatermarkedImage url={modalImage} alt="Preview" style={{ maxWidth: '90vw', maxHeight: '80vh', borderRadius: 12 }} />
+              <Watermark content="PREVIEW">
+                <img
+                  src={modalImage}
+                  alt="Preview"
+                  style={{ maxWidth: '90vw', maxHeight: '80vh', borderRadius: 12 }}
+                />
+              </Watermark>
             ) : (
               <img
                 src={modalImage}
@@ -312,7 +336,6 @@ function DeliverablesPanel({ tradeId, userId, partnerId }) {
         </div>,
         document.body
       )}
-      {/* Video Modal */}
       <Modal
         open={!!modalVideo}
         onCancel={() => {

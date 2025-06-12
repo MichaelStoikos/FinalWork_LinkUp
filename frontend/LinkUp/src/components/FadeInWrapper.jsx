@@ -1,5 +1,14 @@
 import { motion } from 'framer-motion';
 
+/**
+ * FadeInWrapper component that provides fade-in animation for child components.
+ * Uses Framer Motion to animate opacity and vertical position transitions.
+ * 
+ * @param {Object} props - Component props
+ * @param {React.ReactNode} props.children - Child components to animate
+ * @param {...any} props - Additional props passed to motion.div
+ * @returns {JSX.Element} The animated wrapper component
+ */
 export default function FadeInWrapper({ children, ...props }) {
   return (
     <motion.div

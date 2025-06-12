@@ -5,6 +5,13 @@ import { collection, query, where, orderBy, onSnapshot, doc, updateDoc, getDocs,
 import { Bell } from 'lucide-react';
 import '../style/NotificationBell.css';
 
+/**
+ * NotificationBell component for displaying and managing user notifications.
+ * Provides real-time notification updates, unread count display, and notification actions.
+ * Handles navigation to relevant pages based on notification types.
+ * 
+ * @returns {JSX.Element} The rendered notification bell component
+ */
 function NotificationBell() {
     const [notifications, setNotifications] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
@@ -13,6 +20,10 @@ function NotificationBell() {
     const [error, setError] = useState(null);
     const navigate = useNavigate();
 
+    /**
+     * Sets up real-time notification listener for the current user.
+     * Fetches notifications from Firestore and updates state accordingly.
+     */
     useEffect(() => {
         if (!auth.currentUser) {
             console.log('No user logged in, skipping notification subscription');
@@ -88,7 +99,10 @@ function NotificationBell() {
             });
     }, []);
 
-    // Mark all unread notifications as read when dropdown is opened
+    /**
+     * Marks all unread notifications as read when the dropdown is opened.
+     * Uses batch write to update multiple notifications efficiently.
+     */
     useEffect(() => {
         if (isOpen && notifications.length > 0) {
             const unread = notifications.filter(n => !n.read);
@@ -107,6 +121,13 @@ function NotificationBell() {
         }
     }, [isOpen, notifications]);
 
+    /**
+     * Handles notification click by deleting the notification and navigating to relevant page.
+     * 
+     * @async
+     * @param {Object} notification - The notification object that was clicked
+     * @returns {Promise<void>}
+     */
     const handleNotificationClick = async (notification) => {
         console.log('Notification clicked:', notification);
         // Delete the notification from Firestore
@@ -133,6 +154,12 @@ function NotificationBell() {
         setIsOpen(false);
     };
 
+    /**
+     * Returns the appropriate emoji icon for different notification types.
+     * 
+     * @param {string} type - The notification type
+     * @returns {string} The emoji icon for the notification type
+     */
     const getNotificationIcon = (type) => {
         switch (type) {
             case 'collaboration_request':

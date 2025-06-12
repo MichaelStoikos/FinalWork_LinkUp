@@ -11,7 +11,13 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useToast } from '../components/ToastContext';
 
-
+/**
+ * Profile component for managing user profile information and settings.
+ * Provides functionality to view, edit, and update user profile data including
+ * profile picture, bio, specialization, and social links.
+ * 
+ * @returns {JSX.Element} The rendered profile page component
+ */
 function Profile() {
     const [user, setUser] = useState(null);
     const [profile, setProfile] = useState(null);
@@ -38,6 +44,10 @@ function Profile() {
         }
     });
 
+    /**
+     * Listens for authentication state changes and fetches user profile data.
+     * Redirects to home if user is not authenticated.
+     */
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(async (user) => {
             if (user) {
@@ -74,12 +84,22 @@ function Profile() {
         return () => unsubscribe();
     }, [navigate]);
 
+    /**
+     * Triggers file input click when profile image is clicked in edit mode.
+     */
     const handleImageClick = () => {
         if (isEditing) {
             fileInputRef.current?.click();
         }
     };
 
+    /**
+     * Handles profile image upload and conversion to Base64.
+     * Validates file type and size before processing.
+     * 
+     * @param {Event} e - File input change event
+     * @returns {Promise<void>}
+     */
     const handleImageChange = async (e) => {
         const file = e.target.files?.[0];
         if (!file) return;
@@ -123,6 +143,11 @@ function Profile() {
         }
     };
 
+    /**
+     * Handles form input changes for both regular fields and social links.
+     * 
+     * @param {Event} e - Input change event
+     */
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         if (name.startsWith('social.')) {
@@ -142,6 +167,13 @@ function Profile() {
         }
     };
 
+    /**
+     * Submits profile form data to Firestore and updates local state.
+     * Shows success toast and refreshes page to update navigation.
+     * 
+     * @param {Event} e - Form submit event
+     * @returns {Promise<void>}
+     */
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -161,6 +193,11 @@ function Profile() {
         }
     };
 
+    /**
+     * Signs out the current user and navigates to home page.
+     * 
+     * @returns {Promise<void>}
+     */
     const handleSignOut = async () => {
         try {
             await auth.signOut();

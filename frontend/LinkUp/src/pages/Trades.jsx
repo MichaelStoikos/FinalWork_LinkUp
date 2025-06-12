@@ -9,6 +9,13 @@ import { Helmet } from 'react-helmet';
 import React from 'react';
 import FadeInWrapper from '../components/FadeInWrapper';
 
+/**
+ * Trades component for displaying and managing service swap listings.
+ * Fetches open trades from the backend API and displays them in a card layout.
+ * Provides functionality to create new trades and view trade details.
+ * 
+ * @returns {JSX.Element} The rendered trades page component
+ */
 function Trades() {
   const navigate = useNavigate();
   const [trades, setTrades] = useState([]);
@@ -19,10 +26,16 @@ function Trades() {
   const [userProfile, setUserProfile] = useState(null);
   const [creatorProfiles, setCreatorProfiles] = useState({});
 
+  /**
+   * Fetches trades from the backend API when component mounts.
+   */
   useEffect(() => {
     fetchTrades();
   }, []);
 
+  /**
+   * Listens for authentication state changes and fetches user profile.
+   */
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
@@ -38,7 +51,10 @@ function Trades() {
     return () => unsubscribe();
   }, []);
 
-  // Fetch creator profiles for all trades
+  /**
+   * Fetches creator profiles for all displayed trades.
+   * Updates when trades array changes.
+   */
   useEffect(() => {
     const fetchProfiles = async () => {
       const newProfiles = {};
@@ -60,6 +76,11 @@ function Trades() {
     if (trades.length > 0) fetchProfiles();
   }, [trades]);
 
+  /**
+   * Fetches trades from the backend API and filters for open status.
+   * 
+   * @returns {Promise<void>}
+   */
   const fetchTrades = async () => {
     try {
       setLoading(true);
@@ -69,7 +90,6 @@ function Trades() {
         throw new Error(errorData.details || 'Failed to fetch trades');
       }
       const data = await response.json();
-      // Only show trades with status 'open'
       setTrades(data.filter(trade => trade.status === 'open'));
     } catch (error) {
       console.error("Error fetching trades:", error);
@@ -79,6 +99,12 @@ function Trades() {
     }
   };
 
+  /**
+   * Creates a new trade via the backend API and refreshes the trades list.
+   * 
+   * @param {Object} tradeData - The trade data to create
+   * @returns {Promise<void>}
+   */
   const handleCreateTrade = async (tradeData) => {
     try {
       const response = await fetch('https://finalworklinkup-production.up.railway.app/api/trades', {
@@ -94,7 +120,6 @@ function Trades() {
         throw new Error(errorData.details || 'Failed to create trade');
       }
 
-      // Refresh the trades list
       await fetchTrades();
       setIsModalOpen(false);
     } catch (error) {
@@ -103,6 +128,11 @@ function Trades() {
     }
   };
 
+  /**
+   * Navigates to the trade detail page for the specified trade.
+   * 
+   * @param {string} tradeId - The ID of the trade to view
+   */
   const handleTradeClick = (tradeId) => {
     navigate(`/trade/${tradeId}`);
   };

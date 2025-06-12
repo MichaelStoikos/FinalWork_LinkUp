@@ -1,14 +1,3 @@
-setup Firebase: https://firebase.google.com/docs/web/setup?hl=en
-CRUD Trades & Connection: https://youtu.be/jCY6DH8F4oc?si=Ta07a4w6UFi7dX14 
-CRUD explain Firebase: https://chatgpt.com/share/6820f204-3a9c-8004-b93d-931927905b1f
-Base64 Image Strings: https://chatgpt.com/share/68250ec2-7330-8004-bcaa-b085a155c8a7
-Base64 Image Strings readAsDataURL Documentation: https://developer.mozilla.org/en-US/docs/Web/API/FileReader/readAsDataURL
-Google Authentification: https://firebase.google.com/docs/auth?hl=fr 
-handleGoogleSignIn: https://medium.com/%40josephpay911/how-to-connect-firebase-auth-and-firestore-database-in-react-js-fc4109e2be39
-FileReader: https://developer.mozilla.org/en-US/docs/Web/API/FileReader
-Drag: https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API
-Example for CreateTradeModal.jsx: https://chatgpt.com/share/68251741-4f10-8004-abe9-47a86b63982c
-
 # LinkUp
 
 **LinkUp** is a collaborative platform for multimedia professionals to connect, swap skills, and work together on creative projects. Users can showcase their profiles, request collaborations, and manage trades in a modern, user-friendly interface.
@@ -62,11 +51,10 @@ Example for CreateTradeModal.jsx: https://chatgpt.com/share/68251741-4f10-8004-a
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/yourusername/linkup.git
-   cd linkup
+   git clone https://github.com/MichaelStoikos/FinalWork_LinkUp.git
    ```
 
-2. **Install dependencies:**
+2. **Install frontend dependencies:**
    ```bash
    cd frontend/LinkUp
    npm install
@@ -81,16 +69,6 @@ Example for CreateTradeModal.jsx: https://chatgpt.com/share/68251741-4f10-8004-a
 
 4. **Configure environment variables:**
    - See [Environment Variables](#environment-variables) below.
-
-5. **Start the development server:**
-   ```bash
-   npm start
-   # or
-   yarn start
-   ```
-
-6. **Open your browser:**
-   - Visit [http://localhost:3000](http://localhost:3000)
 
 ---
 
@@ -142,16 +120,30 @@ Contributions are welcome! Please open an issue or submit a pull request.
 ---
 
 ## References
-setup Firebase: https://firebase.google.com/docs/web/setup?hl=en <br/>
-CRUD Trades & Connection: https://youtu.be/jCY6DH8F4oc?si=Ta07a4w6UFi7dX14 <br/>
-CRUD explain Firebase: https://chatgpt.com/share/6820f204-3a9c-8004-b93d-931927905b1f<br/>
-Base64 Image Strings: https://chatgpt.com/share/68250ec2-7330-8004-bcaa-b085a155c8a7<br/>
-Base64 Image Strings readAsDataURL Documentation: https://developer.mozilla.org/en-US/docs/Web/API/FileReader/readAsDataURL<br/>
-Google Authentification: https://firebase.google.com/docs/auth?hl=fr <br/>
-handleGoogleSignIn: https://medium.com/%40josephpay911/how-to-connect-firebase-auth-and-firestore-database-in-react-js-fc4109e2be39<br/>
-FileReader: https://developer.mozilla.org/en-US/docs/Web/API/FileReader<br/>
-Drag: https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API<br/>
-Example for CreateTradeModal.jsx: https://chatgpt.com/share/68251741-4f10-8004-abe9-47a86b63982c<br/>
+**setup Firebase:** https://firebase.google.com/docs/web/setup?hl=en <br/>
+**CRUD Trades & Connection:** https://youtu.be/jCY6DH8F4oc?si=Ta07a4w6UFi7dX14 <br/>
+**CRUD explain Firebase:** https://chatgpt.com/share/6820f204-3a9c-8004-b93d-931927905b1f<br/>
+**Base64 Image Strings:** https://chatgpt.com/share/68250ec2-7330-8004-bcaa-b085a155c8a7<br/>
+**Base64 Image Strings readAsDataURL Documentation:** https://developer.mozilla.org/en-US/docs/Web/API/FileReader/readAsDataURL<br/>
+**Google Authentification:** https://firebase.google.com/docs/auth?hl=fr <br/>
+**handleGoogleSignIn:** https://medium.com/%40josephpay911/how-to-connect-firebase-auth-and-firestore-database-in-react-js-fc4109e2be39<br/>
+**FileReader:** https://developer.mozilla.org/en-US/docs/Web/API/FileReader<br/>
+**Drag:** https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API<br/>
+**Example for CreateTradeModal.jsx:** https://chatgpt.com/share/68251741-4f10-8004-abe9-47a86b63982c<br/>
+**FadeInWrapper:** Google AI Overview, Searched this: "fade in framer motion component" <br/>
+**createPortal React-Router-Dom usage for pop-ups and previews:** https://react.dev/reference/react-dom/createPortal <br/>
+**React Helmet for video-background preload:** https://www.npmjs.com/package/react-helmet
+**Pop up TOAST React:** https://latteandcode.medium.com/react-toast-an-implementation-with-the-context-api-and-hooks-f52fa564e4a8<br/>
+**Swiper React for Tutorial slideshow:** https://swiperjs.com/react<br/>
+**Watermark Antd for preview videos and pictures:** https://ant.design/components/watermark <br/>
+https://youtu.be/i7Jcj-lHuys?si=d6IbpBb1Fv8PlnS- <br/>
+**Icons Lucide-React:** https://lucide.dev/icons/<br/>
+**Custom Scroll-bar:** https://www.w3schools.com/howto/howto_css_custom_scrollbar.asp<br/>
+
+
+
+
+
 
 ## License
 

@@ -1,9 +1,26 @@
 import React, { useState } from 'react';
 import '../style/RequestCollabPopup.css';
 
+/**
+ * RequestCollabPopup component for submitting collaboration requests.
+ * Allows users to specify what they want in return for their work in a trade.
+ * 
+ * @param {Object} props - Component props
+ * @param {boolean} props.isOpen - Whether the popup is currently open
+ * @param {Function} props.onClose - Callback function to close the popup
+ * @param {Function} props.onSubmit - Callback function called with the message on submission
+ * @param {boolean} props.loading - Whether the form is in a loading state
+ * @returns {JSX.Element|null} The rendered popup component or null if not open
+ */
 function RequestCollabPopup({ isOpen, onClose, onSubmit, loading }) {
   const [message, setMessage] = useState('');
 
+  /**
+   * Handles form submission by validating the message and calling the onSubmit callback.
+   * Resets the message state after successful submission.
+   * 
+   * @param {Event} e - The form submit event
+   */
   const handleSubmit = (e) => {
     e.preventDefault();
     if (message.trim()) {

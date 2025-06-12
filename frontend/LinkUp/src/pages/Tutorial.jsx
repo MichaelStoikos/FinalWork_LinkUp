@@ -6,6 +6,13 @@ import { Pagination } from 'swiper/modules';
 import { useNavigate } from 'react-router-dom';
 import '../style/Tutorial.css';
 
+/**
+ * Tutorial component for displaying an interactive guide on how LinkUp works.
+ * Uses Swiper for slide navigation and provides step-by-step instructions.
+ * Allows users to navigate through tutorial slides or finish and go to home.
+ * 
+ * @returns {JSX.Element} The rendered tutorial component
+ */
 export default function Tutorial() {
   const swiperRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -14,7 +21,7 @@ export default function Tutorial() {
   const slides = [
     { title: '1. Getting Started: Post or Find a Job', desc: 'Want to collaborate? Start by creating a job listing where you describe the multimedia service you need or offer. Or, browse existing jobs to find opportunities that match your skills. Once you find a job or an interested partner, you can start the negotiation process.'},
     { title: '2. Connecting & Communicating', desc: 'Once two users agree on a job, they can start communicating! Use text chat within the platform or set up meetings through external platforms like Zoom, Teams, or Discord. Clear communication is key to successful collaboration.'},
-    { title: '3. Working on Each Other\'s Projects', desc: 'After agreeing on the details, both parties begin working on their respective tasks. You’ll be helping each other out in a fair exchange—whether it’s video editing, graphic design, coding, or any other multimedia service.'},
+    { title: '3. Working on Each Other\'s Projects', desc: 'After agreeing on the details, both parties begin working on their respective tasks. You\'ll be helping each other out in a fair exchange—whether it\'s video editing, graphic design, coding, or any other multimedia service.'},
     { title: '4. Progress Reviews & Adjustments', desc: 'Every 1 or 2 weeks, you and your collaborator will review progress. This ensures both sides are on track and allows for any necessary adjustments before the final deadline.'},
     { title: '5. Completing the Deal', desc: 'Once the agreed-upon time (e.g., 4 weeks) is up, both parties should be satisfied with the results. When both confirm that the job is completed, the deal is sealed—no loose ends, no unfinished work! '}
   ];

@@ -5,18 +5,39 @@ import { collection, query, where, getDocs } from 'firebase/firestore';
 import { X, User } from 'lucide-react';
 import '../style/SpecializationPopup.css';
 
+/**
+ * SpecializationPopup component for displaying users by their specialization.
+ * Fetches and displays a list of users who have specified a particular specialization.
+ * Allows navigation to user profiles and handles loading/error states.
+ * 
+ * @param {Object} props - Component props
+ * @param {boolean} props.isOpen - Whether the popup is currently open
+ * @param {Function} props.onClose - Callback function to close the popup
+ * @param {string} props.specialization - The specialization to filter users by
+ * @returns {JSX.Element|null} The rendered popup component or null if not open
+ */
 function SpecializationPopup({ isOpen, onClose, specialization }) {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
 
+    /**
+     * Fetches users when the popup opens or specialization changes.
+     */
     useEffect(() => {
         if (isOpen && specialization) {
             fetchUsersBySpecialization();
         }
     }, [isOpen, specialization]);
 
+    /**
+     * Fetches users from Firestore filtered by the specified specialization.
+     * Updates the users state with the fetched data and handles loading/error states.
+     * 
+     * @async
+     * @returns {Promise<void>}
+     */
     const fetchUsersBySpecialization = async () => {
         try {
             setLoading(true);
@@ -40,11 +61,21 @@ function SpecializationPopup({ isOpen, onClose, specialization }) {
         }
     };
 
+    /**
+     * Navigates to a user's profile page and closes the popup.
+     * 
+     * @param {string} userId - The ID of the user to navigate to
+     */
     const handleUserClick = (userId) => {
         navigate(`/account/${userId}`);
         onClose();
     };
 
+    /**
+     * Handles backdrop click to close the popup when clicking outside the modal.
+     * 
+     * @param {Event} e - The click event
+     */
     const handleBackdropClick = (e) => {
         if (e.target === e.currentTarget) {
             onClose();

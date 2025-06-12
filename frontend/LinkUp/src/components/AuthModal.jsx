@@ -7,6 +7,16 @@ import '../style/AuthModal.css';
 import { Eye, EyeOff } from 'lucide-react';
 import { useToast } from './ToastContext';
 
+/**
+ * AuthModal component for user authentication including login and registration.
+ * Handles both email/password and Google OAuth authentication methods.
+ * Creates or updates user profiles in Firestore upon successful authentication.
+ * 
+ * @param {Object} props - Component props
+ * @param {boolean} props.isOpen - Whether the modal is currently open
+ * @param {Function} props.onClose - Callback function to close the modal
+ * @returns {JSX.Element|null} The rendered authentication modal or null if not open
+ */
 function AuthModal({ isOpen, onClose }) {
     const [isLogin, setIsLogin] = useState(true);
     const [email, setEmail] = useState('');
@@ -16,17 +26,22 @@ function AuthModal({ isOpen, onClose }) {
     const [showPassword, setShowPassword] = useState(false);
     const { showToast } = useToast();
 
+    /**
+     * Handles Google OAuth authentication using Firebase Auth.
+     * Creates or updates user profile in Firestore with default values.
+     * 
+     * @async
+     * @returns {Promise<void>}
+     */
     const handleGoogleSignIn = async () => {
         try {
             setError('');
             const result = await signInWithPopup(auth, googleProvider);
-            // Create or update user document in Firestore
             await setDoc(doc(db, 'users', result.user.uid), {
                 email: result.user.email,
                 displayName: result.user.displayName,
                 photoURL: result.user.photoURL,
                 createdAt: new Date().toISOString(),
-                // Add other fields with default values
                 nickname: result.user.displayName,
                 tags: [],
                 availability: [],
@@ -48,24 +63,29 @@ function AuthModal({ isOpen, onClose }) {
         }
     };
 
+    /**
+     * Handles email/password authentication for both login and registration.
+     * Validates required fields and creates user profile for new registrations.
+     * 
+     * @async
+     * @param {Event} e - The form submit event
+     * @returns {Promise<void>}
+     */
     const handleEmailAuth = async (e) => {
         e.preventDefault();
         setError('');
 
         try {
             if (isLogin) {
-                // Login
                 await signInWithEmailAndPassword(auth, email, password);
                 onClose();
                 showToast('Logged in successfully!', 'success');
             } else {
-                // Register
                 if (!nickname) {
                     setError('Nickname is required');
                     return;
                 }
                 const result = await createUserWithEmailAndPassword(auth, email, password);
-                // Create user document in Firestore
                 await setDoc(doc(db, 'users', result.user.uid), {
                     email: email,
                     nickname: nickname,

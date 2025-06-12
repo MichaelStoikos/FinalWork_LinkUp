@@ -18,6 +18,13 @@ import '../style/Messages.css';
 import DeliverWorkModal from '../components/DeliverWorkModal';
 import DeliverablesPanel from '../components/DeliverablesPanel';
 
+/**
+ * Messages component for real-time chat functionality between collaboration partners.
+ * Handles message sending, file uploads, and integrates with deliverables panel.
+ * Provides real-time message updates and notification system.
+ * 
+ * @returns {JSX.Element} The rendered messages chat component
+ */
 function Messages() {
   const { chatId } = useParams();
   const navigate = useNavigate();
@@ -33,6 +40,10 @@ function Messages() {
   const [isDeliverModalOpen, setDeliverModalOpen] = useState(false);
   const [showSidePanel, setShowSidePanel] = useState(false);
 
+  /**
+   * Fetches chat details and sets up real-time message listener.
+   * Determines chat partner and validates collaboration request status.
+   */
   useEffect(() => {
     if (!auth.currentUser) {
       navigate('/');
@@ -41,7 +52,6 @@ function Messages() {
 
     const fetchChatDetails = async () => {
       try {
-        // Get chat details from collaboration request
         const requestRef = doc(db, 'collaborationRequests', chatId);
         const requestSnap = await getDoc(requestRef);
         
@@ -54,20 +64,17 @@ function Messages() {
           throw new Error('Chat is not available');
         }
 
-        // Determine chat partner
         const partnerId = requestData.creatorUid === auth.currentUser.uid 
           ? requestData.requesterUid 
           : requestData.creatorUid;
         setPartnerId(partnerId);
 
-        // Fetch partner's profile
         const partnerRef = doc(db, 'users', partnerId);
         const partnerSnap = await getDoc(partnerRef);
         if (partnerSnap.exists()) {
           setChatPartner(partnerSnap.data());
         }
 
-        // Subscribe to messages
         const messagesRef = collection(db, 'messages');
         const q = query(
           messagesRef,
@@ -95,10 +102,19 @@ function Messages() {
     fetchChatDetails();
   }, [chatId, navigate]);
 
+  /**
+   * Scrolls to the bottom of the messages list when new messages arrive.
+   */
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  /**
+   * Sends a text message and creates a notification for the chat partner.
+   * 
+   * @param {Event} e - Form submit event
+   * @returns {Promise<void>}
+   */
   const handleSendMessage = async (e) => {
     e.preventDefault();
     if (!newMessage.trim() && !uploadingFile) return;
@@ -115,7 +131,6 @@ function Messages() {
       });
       console.log('Message sent:', messageDoc.id);
 
-      // Create notification for the chat partner
       console.log('Creating notification for chat partner:', partnerId);
       const notificationsRef = collection(db, 'notifications');
       const notificationData = {
@@ -137,6 +152,12 @@ function Messages() {
     }
   };
 
+  /**
+   * Uploads a file to Firebase Storage and creates a file message.
+   * 
+   * @param {Event} e - File input change event
+   * @returns {Promise<void>}
+   */
   const handleFileUpload = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -145,12 +166,10 @@ function Messages() {
       setUploadingFile(true);
       setError(null);
 
-      // Upload file to Firebase Storage
       const storageRef = ref(storage, `chat-files/${chatId}/${Date.now()}-${file.name}`);
       await uploadBytes(storageRef, file);
       const downloadURL = await getDownloadURL(storageRef);
 
-      // Save message with file info
       const messagesRef = collection(db, 'messages');
       await addDoc(messagesRef, {
         chatId,
@@ -172,6 +191,13 @@ function Messages() {
     }
   };
 
+  /**
+   * Downloads a file from the provided URL and triggers browser download.
+   * 
+   * @param {string} fileUrl - The URL of the file to download
+   * @param {string} fileName - The name to save the file as
+   * @returns {Promise<void>}
+   */
   const handleDownloadFile = async (fileUrl, fileName) => {
     try {
       const response = await fetch(fileUrl);

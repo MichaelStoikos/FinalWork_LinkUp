@@ -21,6 +21,18 @@ const SERVICE_OPTIONS = [
   'Other'
 ];
 
+/**
+ * EditTradeModal component for editing existing trade/collaboration opportunities.
+ * Handles form updates, image upload, tag management, and trade modification.
+ * Pre-populates form with existing trade data and updates Firestore on submission.
+ * 
+ * @param {Object} props - Component props
+ * @param {boolean} props.isOpen - Whether the modal is currently open
+ * @param {Function} props.onClose - Callback function to close the modal
+ * @param {Object} props.trade - The trade object to be edited
+ * @param {Function} props.onSubmit - Callback function called with updated trade data
+ * @returns {JSX.Element|null} The rendered modal component or null if not open
+ */
 function EditTradeModal({ isOpen, onClose, trade, onSubmit }) {
   const [formData, setFormData] = useState(trade || {
     name: '',
@@ -36,7 +48,10 @@ function EditTradeModal({ isOpen, onClose, trade, onSubmit }) {
   const [uploading, setUploading] = useState(false);
   const { showToast } = useToast();
 
-  // Update form when trade changes
+  /**
+   * Updates form data when the trade prop changes.
+   * Resets form state and image preview to match the new trade data.
+   */
   React.useEffect(() => {
     setFormData(trade || {
       name: '',
@@ -50,6 +65,11 @@ function EditTradeModal({ isOpen, onClose, trade, onSubmit }) {
     setImagePreview(trade?.image || '');
   }, [trade]);
 
+  /**
+   * Updates form data when input fields change.
+   * 
+   * @param {Event} e - The change event from the input element
+   */
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prevState => ({
@@ -58,6 +78,10 @@ function EditTradeModal({ isOpen, onClose, trade, onSubmit }) {
     }));
   };
 
+  /**
+   * Adds a new tag to the trade if it's not already present.
+   * Clears the tag input field after successful addition.
+   */
   const handleTagAdd = () => {
     if (tagInput.trim() && !formData.tags.includes(tagInput.trim())) {
       setFormData(prev => ({ ...prev, tags: [...prev.tags, tagInput.trim()] }));
@@ -65,16 +89,28 @@ function EditTradeModal({ isOpen, onClose, trade, onSubmit }) {
     }
   };
 
+  /**
+   * Removes a specific tag from the trade's tag list.
+   * 
+   * @param {string} tag - The tag to remove
+   */
   const handleTagRemove = (tag) => {
     setFormData(prev => ({ ...prev, tags: prev.tags.filter(t => t !== tag) }));
   };
 
+  /**
+   * Handles file selection and uploads the image to Firebase Storage.
+   * Updates form data and preview with the uploaded image URL.
+   * 
+   * @async
+   * @param {Event} e - The file input change event
+   * @returns {Promise<void>}
+   */
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
       setUploading(true);
       try {
-        // Upload to Firebase Storage
         const fileRef = ref(storage, `trade-images/${Date.now()}-${file.name}`);
         await uploadBytes(fileRef, file);
         const url = await getDownloadURL(fileRef);
@@ -87,6 +123,14 @@ function EditTradeModal({ isOpen, onClose, trade, onSubmit }) {
     }
   };
 
+  /**
+   * Handles file drop events for drag-and-drop image upload.
+   * Uploads the dropped file to Firebase Storage and updates the form.
+   * 
+   * @async
+   * @param {DragEvent} e - The drop event
+   * @returns {Promise<void>}
+   */
   const handleDrop = async (e) => {
     e.preventDefault();
     const file = e.dataTransfer.files[0];
@@ -105,10 +149,23 @@ function EditTradeModal({ isOpen, onClose, trade, onSubmit }) {
     }
   };
 
+  /**
+   * Prevents default browser behavior for drag over events.
+   * 
+   * @param {DragEvent} e - The drag over event
+   */
   const handleDragOver = (e) => {
     e.preventDefault();
   };
 
+  /**
+   * Handles form submission by updating the trade document in Firestore.
+   * Merges updated form data with existing trade data and calls the onSubmit callback.
+   * 
+   * @async
+   * @param {Event} e - The form submit event
+   * @returns {Promise<void>}
+   */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setUploading(true);

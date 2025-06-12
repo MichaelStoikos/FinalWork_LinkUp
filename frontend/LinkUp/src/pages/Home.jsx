@@ -14,17 +14,32 @@ import { motion } from 'framer-motion';
 import FadeInWrapper from '../components/FadeInWrapper';
 import SpecializationPopup from '../components/SpecializationPopup';
 
+/**
+ * Home component for the main landing page of the LinkUp application.
+ * Displays hero section, skills showcase, and tutorial section.
+ * Provides navigation to different sections and specialization popup functionality.
+ * 
+ * @returns {JSX.Element} The rendered home page component
+ */
 function Home() {
     const [user] = useAuthState(auth);
     const navigate = useNavigate();
     const [popupOpen, setPopupOpen] = useState(false);
     const [selectedSpecialization, setSelectedSpecialization] = useState('');
 
+    /**
+     * Handles skill card click to open specialization popup.
+     * 
+     * @param {string} specialization - The selected specialization
+     */
     const handleSkillCardClick = (specialization) => {
         setSelectedSpecialization(specialization);
         setPopupOpen(true);
     };
 
+    /**
+     * Closes the specialization popup and resets selected specialization.
+     */
     const closePopup = () => {
         setPopupOpen(false);
         setSelectedSpecialization('');

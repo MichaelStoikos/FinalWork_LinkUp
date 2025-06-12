@@ -8,13 +8,22 @@ import { motion } from 'framer-motion';
 import '../style/MessagesPage.css';
 import { Helmet } from 'react-helmet';
 
+/**
+ * MessagesPage component for the main messaging interface.
+ * Displays a two-column layout with chat list sidebar and main messages area.
+ * Handles authentication, chat selection, and automatic navigation.
+ * 
+ * @returns {JSX.Element} The rendered messages page component
+ */
 function MessagesPage() {
   const [user] = useAuthState(auth);
   const { chatId } = useParams();
   const navigate = useNavigate();
   const [chats, setChats] = useState([]);
 
-  // If not logged in, redirect to home
+  /**
+   * Redirects to home page if user is not authenticated.
+   */
   useEffect(() => {
     if (!user) {
       navigate('/');
@@ -25,12 +34,18 @@ function MessagesPage() {
     return null;
   }
 
-  // Function to receive chats from ChatList
+  /**
+   * Updates the chats state with data received from ChatList component.
+   * 
+   * @param {Array} updatedChats - The updated array of chat objects
+   */
   const handleChatsUpdate = (updatedChats) => {
     setChats(updatedChats);
   };
 
-  // Effect to automatically select first chat if none selected
+  /**
+   * Automatically navigates to the first chat if no chat is currently selected.
+   */
   useEffect(() => {
     if (!chatId && chats.length > 0) {
       navigate(`/messages/${chats[0].id}`);

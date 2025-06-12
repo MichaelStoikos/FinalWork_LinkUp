@@ -5,6 +5,15 @@ import LoginRequired from './LoginRequired';
 import AuthModal from './AuthModal';
 import '../style/LoginRequiredOverlay.css';
 
+/**
+ * LoginRequiredOverlay component for displaying a login requirement modal.
+ * Creates a portal to render the modal outside the normal DOM hierarchy.
+ * Integrates with AuthModal for user authentication.
+ * 
+ * @param {Object} props - Component props
+ * @param {Function} props.onClose - Callback function to close the overlay
+ * @returns {JSX.Element} The rendered overlay component using portal
+ */
 function LoginRequiredOverlay({ onClose }) {
     const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 

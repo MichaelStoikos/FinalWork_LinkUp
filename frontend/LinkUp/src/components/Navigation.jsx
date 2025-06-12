@@ -6,6 +6,13 @@ import AuthModal from './AuthModal';
 import NotificationBell from './NotificationBell';
 import '../style/Navigation.css';
 
+/**
+ * Navigation component for the main application header.
+ * Handles user authentication state, profile management, and navigation links.
+ * Displays user profile picture, notification bell, and authentication modal.
+ * 
+ * @returns {JSX.Element} The rendered navigation component
+ */
 function Navigation() {
     const [user, setUser] = useState(null);
     const [profilePic, setProfilePic] = useState(null);
@@ -13,6 +20,10 @@ function Navigation() {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const navigate = useNavigate();
 
+    /**
+     * Sets up authentication state listener and fetches user profile data.
+     * Updates user state and profile picture when authentication changes.
+     */
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(async (user) => {
             setUser(user);
@@ -33,6 +44,12 @@ function Navigation() {
         return () => unsubscribe();
     }, []);
 
+    /**
+     * Handles user sign out by calling Firebase Auth and navigating to home page.
+     * 
+     * @async
+     * @returns {Promise<void>}
+     */
     const handleSignOut = async () => {
         try {
             await auth.signOut();
@@ -42,14 +59,23 @@ function Navigation() {
         }
     };
 
+    /**
+     * Navigates to the user's profile page.
+     */
     const handleProfileClick = () => {
         navigate('/profile');
     };
 
+    /**
+     * Navigates to the user's trades page.
+     */
     const handleMyTradesClick = () => {
         navigate('/my-trades');
     };
 
+    /**
+     * Toggles the profile dropdown menu visibility.
+     */
     const toggleDropdown = () => {
         setIsDropdownOpen(!isDropdownOpen);
     };

@@ -8,6 +8,13 @@ import { Helmet } from 'react-helmet';
 import React from 'react';
 import { motion } from 'framer-motion';
 
+/**
+ * AccountDetails component for displaying user profile information.
+ * Fetches and displays user profile data including bio, specialization, and social links.
+ * Provides navigation to edit profile for current user and handles loading/error states.
+ * 
+ * @returns {JSX.Element} The rendered account details page component
+ */
 function AccountDetails() {
   const { userId } = useParams();
   const navigate = useNavigate();
@@ -16,6 +23,10 @@ function AccountDetails() {
   const [error, setError] = useState(null);
   const [isCurrentUser, setIsCurrentUser] = useState(false);
 
+  /**
+   * Fetches user profile data from Firestore when component mounts or userId changes.
+   * Determines if the profile belongs to the current user and handles errors.
+   */
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -30,7 +41,6 @@ function AccountDetails() {
         const profileData = docSnap.data();
         setProfile(profileData);
         
-        // Check if this is the current user's profile
         if (auth.currentUser && auth.currentUser.uid === userId) {
           setIsCurrentUser(true);
         }

@@ -8,9 +8,16 @@ import { Helmet } from 'react-helmet';
 import React from 'react';
 import { motion } from 'framer-motion';
 
+/**
+ * MyTrades component for managing user's trades and collaboration requests.
+ * Displays trades created by the user and trades they're collaborating on.
+ * Handles collaboration request management and trade editing/deletion.
+ * 
+ * @returns {JSX.Element} The rendered my trades page component
+ */
 function MyTrades() {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('trades'); // 'trades' or 'requests'
+  const [activeTab, setActiveTab] = useState('trades');
   const [myTrades, setMyTrades] = useState([]);
   const [collaborationRequests, setCollaborationRequests] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -20,6 +27,9 @@ function MyTrades() {
   const [creatorProfiles, setCreatorProfiles] = useState({});
   const [requesterProfiles, setRequesterProfiles] = useState({});
 
+  /**
+   * Fetches user's trades and collaboration requests when component mounts.
+   */
   useEffect(() => {
     if (auth.currentUser) {
       fetchMyTrades();
@@ -30,7 +40,10 @@ function MyTrades() {
     }
   }, []);
 
-  // Fetch creator profiles for all trades
+  /**
+   * Fetches creator profiles for all displayed trades.
+   * Updates when myTrades array changes.
+   */
   useEffect(() => {
     const fetchProfiles = async () => {
       const newProfiles = {};
@@ -52,7 +65,10 @@ function MyTrades() {
     if (myTrades.length > 0) fetchProfiles();
   }, [myTrades]);
 
-  // Fetch requester profiles for all collaboration requests
+  /**
+   * Fetches requester profiles for all collaboration requests.
+   * Updates when collaborationRequests array changes.
+   */
   useEffect(() => {
     const fetchRequesterProfiles = async () => {
       const newProfiles = {};
@@ -74,12 +90,17 @@ function MyTrades() {
     if (collaborationRequests.length > 0) fetchRequesterProfiles();
   }, [collaborationRequests]);
 
+  /**
+   * Fetches trades created by the user and trades they're collaborating on.
+   * Combines creator and collaborator trades with user role information.
+   * 
+   * @returns {Promise<void>}
+   */
   const fetchMyTrades = async () => {
     try {
       setLoading(true);
       const tradesRef = collection(db, 'trades');
       
-      // First, get all accepted collaboration requests where user is the requester
       const requestsRef = collection(db, 'collaborationRequests');
       const requestsQuery = query(
         requestsRef,
@@ -89,26 +110,22 @@ function MyTrades() {
       const requestsSnapshot = await getDocs(requestsQuery);
       const collaboratorTradeIds = requestsSnapshot.docs.map(doc => doc.data().tradeId);
 
-      // Get trades created by the user
       const creatorQuery = query(
         tradesRef,
         where("creatorUid", "==", auth.currentUser.uid),
         where("status", "in", ["open", "in-progress"])
       );
       
-      // Get trades where user is a collaborator
       const collaboratorQuery = query(
         tradesRef,
         where("status", "in", ["open", "in-progress"])
       );
 
-      // Execute both queries
       const [creatorSnapshot, collaboratorSnapshot] = await Promise.all([
         getDocs(creatorQuery),
         getDocs(collaboratorQuery)
       ]);
 
-      // Combine and deduplicate results
       const creatorTrades = creatorSnapshot.docs.map(doc => ({ 
         id: doc.id, 
         ...doc.data(),
@@ -123,11 +140,9 @@ function MyTrades() {
           userRole: 'collaborator'
         }));
 
-      // Combine both arrays and remove duplicates
       const allTrades = [...creatorTrades, ...collaboratorTrades];
       const uniqueTrades = Array.from(new Map(allTrades.map(trade => [trade.id, trade])).values());
 
-      // Fetch creator info for each trade
       const tradesWithCreatorInfo = await Promise.all(uniqueTrades.map(async (trade) => {
         try {
           const userRef = doc(db, 'users', trade.creatorUid);
@@ -162,6 +177,11 @@ function MyTrades() {
     }
   };
 
+  /**
+   * Fetches pending collaboration requests for trades created by the user.
+   * 
+   * @returns {Promise<void>}
+   */
   const fetchCollaborationRequests = async () => {
     try {
       const requestsRef = collection(db, 'collaborationRequests');
@@ -179,11 +199,22 @@ function MyTrades() {
     }
   };
 
+  /**
+   * Opens the edit modal for the specified trade.
+   * 
+   * @param {Object} trade - The trade to edit
+   */
   const handleEdit = (trade) => {
     setCurrentTrade(trade);
     setIsEditModalOpen(true);
   };
 
+  /**
+   * Deletes a trade from Firestore and refreshes the trades list.
+   * 
+   * @param {string} tradeId - The ID of the trade to delete
+   * @returns {Promise<void>}
+   */
   const handleDelete = async (tradeId) => {
     try {
       await deleteDoc(doc(db, 'trades', tradeId));
@@ -194,12 +225,23 @@ function MyTrades() {
     }
   };
 
+  /**
+   * Handles trade edit submission and refreshes the trades list.
+   * 
+   * @param {Object} updatedTrade - The updated trade data
+   */
   const handleEditSubmit = (updatedTrade) => {
     setIsEditModalOpen(false);
     setCurrentTrade(null);
     fetchMyTrades();
   };
 
+  /**
+   * Navigates to trade details page, preventing navigation when clicking action buttons.
+   * 
+   * @param {string} tradeId - The ID of the trade to view
+   * @param {Event} event - The click event
+   */
   const handleTradeClick = (tradeId, event) => {
     if (event.target.closest('.trade-actions')) {
       return;
@@ -207,6 +249,13 @@ function MyTrades() {
     navigate(`/trade/${tradeId}`);
   };
 
+  /**
+   * Handles collaboration request actions (accept/reject) and updates trade status.
+   * 
+   * @param {string} requestId - The ID of the collaboration request
+   * @param {string} action - The action to perform ('accept' or 'reject')
+   * @returns {Promise<void>}
+   */
   const handleRequestAction = async (requestId, action) => {
     try {
       const requestRef = doc(db, 'collaborationRequests', requestId);
@@ -232,6 +281,11 @@ function MyTrades() {
     }
   };
 
+  /**
+   * Navigates to the requester's profile page.
+   * 
+   * @param {string} userId - The ID of the user to view
+   */
   const handleRequesterClick = (userId) => {
     navigate(`/account/${userId}`);
   };

@@ -9,6 +9,13 @@ import { motion } from 'framer-motion';
 import DeliverablesPanel from '../components/DeliverablesPanel';
 import RequestCollabPopup from '../components/RequestCollabPopup';
 
+/**
+ * TradeDetails component for displaying detailed information about a specific trade.
+ * Fetches trade data from Firestore or backend API and handles collaboration requests.
+ * Provides functionality to view trade details, creator information, and request collaboration.
+ * 
+ * @returns {JSX.Element} The rendered trade details page component
+ */
 function TradeDetails() {
   const { tradeId } = useParams();
   const navigate = useNavigate();
@@ -22,11 +29,14 @@ function TradeDetails() {
   const [isRequestPopupOpen, setIsRequestPopupOpen] = useState(false);
   const [requestMessage, setRequestMessage] = useState('');
 
+  /**
+   * Fetches trade details from Firestore or backend API when component mounts.
+   * Checks if current user is the owner and if they have already requested collaboration.
+   */
   useEffect(() => {
     const fetchTradeDetails = async () => {
       try {
         setLoading(true);
-        // First try to fetch from Firestore
         const tradeRef = doc(db, 'trades', tradeId);
         const tradeSnap = await getDoc(tradeRef);
         
@@ -34,11 +44,9 @@ function TradeDetails() {
           const tradeData = { id: tradeSnap.id, ...tradeSnap.data() };
           setTrade(tradeData);
           
-          // Check if current user is the owner
           if (auth.currentUser && tradeData.creatorUid === auth.currentUser.uid) {
             setIsOwner(true);
           } else if (auth.currentUser) {
-            // Check if user has already requested collaboration
             const requestsRef = collection(db, 'collaborationRequests');
             const q = query(
               requestsRef,
@@ -49,7 +57,6 @@ function TradeDetails() {
             setHasRequested(!querySnapshot.empty);
           }
           
-          // Fetch creator's profile if available
           if (tradeData.creatorUid) {
             const creatorRef = doc(db, 'users', tradeData.creatorUid);
             const creatorSnap = await getDoc(creatorRef);
@@ -58,7 +65,6 @@ function TradeDetails() {
             }
           }
         } else {
-          // If not in Firestore, try the backend API
           const response = await fetch(`https://finalworklinkup-production.up.railway.app/api/trades/${tradeId}`);
           if (!response.ok) {
             throw new Error('Trade not found');
@@ -77,14 +83,26 @@ function TradeDetails() {
     fetchTradeDetails();
   }, [tradeId]);
 
+  /**
+   * Opens the collaboration request popup modal.
+   */
   const handleRequestCollabPopupOpen = () => {
     setIsRequestPopupOpen(true);
   };
 
+  /**
+   * Closes the collaboration request popup modal.
+   */
   const handleRequestCollabPopupClose = () => {
     setIsRequestPopupOpen(false);
   };
 
+  /**
+   * Submits a collaboration request and creates a notification for the trade creator.
+   * 
+   * @param {string} message - The collaboration request message
+   * @returns {Promise<void>}
+   */
   const handleRequestCollabSubmit = async (message) => {
     if (!auth.currentUser) {
       console.log('No user logged in, cannot send collaboration request');
@@ -104,7 +122,7 @@ function TradeDetails() {
         createdAt: new Date().toISOString(),
         counterpartMessage: message
       });
-      // Create notification for the trade creator
+      
       const notificationsRef = collection(db, 'notifications');
       const notificationData = {
         userId: trade.creatorUid,
@@ -125,6 +143,9 @@ function TradeDetails() {
     }
   };
 
+  /**
+   * Navigates to the creator's profile page.
+   */
   const handleCreatorClick = () => {
     if (trade.creatorUid) {
       navigate(`/account/${trade.creatorUid}`);

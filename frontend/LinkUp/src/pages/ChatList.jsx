@@ -4,6 +4,15 @@ import { auth, db } from '../firebase/config';
 import { collection, query, where, getDocs, doc, getDoc, orderBy, onSnapshot } from 'firebase/firestore';
 import '../style/ChatList.css';
 
+/**
+ * ChatList component for displaying and managing user chat conversations.
+ * Fetches accepted collaboration requests and displays them as chat conversations.
+ * Provides real-time message updates and search functionality.
+ * 
+ * @param {Object} props - Component props
+ * @param {Function} props.onChatsUpdate - Callback function to update parent with chat data
+ * @returns {JSX.Element} The rendered chat list component
+ */
 function ChatList({ onChatsUpdate }) {
   const navigate = useNavigate();
   const { chatId } = useParams();
@@ -12,6 +21,10 @@ function ChatList({ onChatsUpdate }) {
   const [error, setError] = useState(null);
   const [search, setSearch] = useState('');
 
+  /**
+   * Fetches accepted collaboration requests and sets up real-time message listener.
+   * Retrieves partner information and latest messages for each chat.
+   */
   useEffect(() => {
     if (!auth.currentUser) {
       navigate('/');
