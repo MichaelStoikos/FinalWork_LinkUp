@@ -21,7 +21,7 @@ To ensure a positive, respectful, and inclusive environment for all users, we re
    Do not share personal information (yours or others’) such as addresses, phone numbers, or private account details.
 
 5. **Report abuse or inappropriate behavior**  
-   If you witness or experience behavior that violates this Code of Conduct, please report it immediately using our in-app tools or by contacting [support@example.com].
+   If you witness or experience behavior that violates this Code of Conduct, please report it immediately using our in-app tools or by contacting [michael.stoikos@outlook.com].
 
 6. **Respect moderators and platform rules**  
    Follow guidance from moderators or admins. They are here to ensure a safe and productive environment for everyone.
