@@ -34,7 +34,8 @@
 ## Tech Stack
 
 - **Frontend:** React, React Router, Framer Motion, Lucide Icons
-- **Backend/Database:** Firebase (Firestore, Auth, Storage)
+- **Backend:** NodeJS Express
+- **Database:** Firebase (Firestore, Auth, Storage)
 - **Styling:** CSS Modules, Custom CSS
 - **Other:** React Helmet, Firebase Hooks
 
@@ -130,28 +131,30 @@ Contributions are welcome! Please open an issue or submit a pull request.
 **FileReader:** https://developer.mozilla.org/en-US/docs/Web/API/FileReader<br/>
 **Drag:** https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API<br/>
 **Example for CreateTradeModal.jsx:** https://chatgpt.com/share/68251741-4f10-8004-abe9-47a86b63982c<br/>
-**FadeInWrapper:** Google AI Overview, Searched this: "fade in framer motion component" <br/>
+**FadeInWrapper Framer-Motion:** Google AI Overview, Searched this: "fade in framer motion component" <br/>
 **createPortal React-Router-Dom usage for pop-ups and previews:** https://react.dev/reference/react-dom/createPortal <br/>
-**React Helmet for video-background preload:** https://www.npmjs.com/package/react-helmet
-**Pop up TOAST React:** https://latteandcode.medium.com/react-toast-an-implementation-with-the-context-api-and-hooks-f52fa564e4a8<br/>
+**React Helmet for video-background preload:** https://www.npmjs.com/package/react-helmet<br/>
+**Pop up TOAST React:** https://latteandcode.medium.com/<br/>
+react-toast-an-implementation-with-the-context-api-and-hooks-f52fa564e4a8<br/>
 **Swiper React for Tutorial slideshow:** https://swiperjs.com/react<br/>
 **Watermark Antd for preview videos and pictures:** https://ant.design/components/watermark <br/>
 https://youtu.be/i7Jcj-lHuys?si=d6IbpBb1Fv8PlnS- <br/>
 **Icons Lucide-React:** https://lucide.dev/icons/<br/>
 **Custom Scroll-bar:** https://www.w3schools.com/howto/howto_css_custom_scrollbar.asp<br/>
-
-
-
-
-
-
-## License
-
-[MIT](LICENSE)
+**getDoc & collection for firebase fetch:** https://firebase.google.com/docs/firestore/query-data/get-data?hl=fr#get_multiple_documents_from_a_collection<br/>
+**updateDoc:** https://firebase.google.com/docs/firestore/manage-data/add-data?hl=fr#update-data<br/>
+**async fetch:** https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Async_JS/Promises<br/>
+**ESLINT Documentation:** https://eslint.org/docs/latest/use/getting-started<br/>
+**Vite:** https://vite.dev/guide/<br/>
+**Firebase Real-time Listeners:** https://firebase.google.com/docs/firestore/query-data/listen?hl=en<br/>
+**WriteBatch Firebase Batch Operations:**https://firebase.google.com/docs/firestore/manage-data/transactions?hl=en<br/>
+**React Firebase Hooks:**https://www.npmjs.com/package/react-firebase-hooks<br/>
+**React Router Dom:**https://reactrouter.com/home<br/>
+**Firebase Storage Upload:**https://firebase.google.com/docs/storage/web/upload-files?hl=en<br/>
 
 ---
 
 ## Contact
 
-- **Project Maintainer:** [Your Name](mailto:your.email@example.com)
-- **Project Link:** [https://github.com/yourusername/linkup](https://github.com/yourusername/linkup)
+- **Project Maintainer:** [Michaël Stoikos](mailto:michael.stoikos@outlook.com)
+- **Project Link:** [Github repo](https://github.com/MichaelStoikos/FinalWork_LinkUp)

@@ -57,7 +57,6 @@ function MyTrades() {
             newProfiles[uid] = docSnap.data();
           }
         } catch (e) {
-          // ignore
         }
       }));
       setCreatorProfiles(newProfiles);
