@@ -54,7 +54,8 @@ function AuthModal({ isOpen, onClose }) {
                 },
                 portfolio: [],
                 endorsements: [],
-                endorsementCount: 0
+                endorsementCount: 0,
+                reputation: 1000
             }, { merge: true });
             onClose();
             showToast('Logged in successfully!', 'success');
@@ -102,7 +103,8 @@ function AuthModal({ isOpen, onClose }) {
                     },
                     portfolio: [],
                     endorsements: [],
-                    endorsementCount: 0
+                    endorsementCount: 0,
+                    reputation: 1000
                 });
                 onClose();
                 showToast('Account created successfully!', 'success');

@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState, useEffect, useRef } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { auth, db } from '../firebase/config';
 import { doc, getDoc } from 'firebase/firestore';
 import AuthModal from './AuthModal';
@@ -18,7 +18,9 @@ function Navigation() {
     const [profilePic, setProfilePic] = useState(null);
     const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const dropdownRef = useRef(null);
     const navigate = useNavigate();
+    const location = useLocation();
 
     /**
      * Sets up authentication state listener and fetches user profile data.
@@ -43,6 +45,32 @@ function Navigation() {
         });
         return () => unsubscribe();
     }, []);
+
+    /**
+     * Closes dropdown when navigating to different pages.
+     */
+    useEffect(() => {
+        setIsDropdownOpen(false);
+    }, [location.pathname]);
+
+    /**
+     * Handles clicks outside the dropdown to close it.
+     */
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setIsDropdownOpen(false);
+            }
+        };
+
+        if (isDropdownOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [isDropdownOpen]);
 
     /**
      * Handles user sign out by calling Firebase Auth and navigating to home page.
@@ -94,7 +122,7 @@ function Navigation() {
             </div>
             <div className="auth-section">
                 {user ? (
-                    <div className="user-menu">
+                    <div className="user-menu" ref={dropdownRef}>
                         <NotificationBell />
                         <button 
                             className="profile-button"

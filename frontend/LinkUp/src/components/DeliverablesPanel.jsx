@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { db } from '../firebase/config';
-import { collection, getDocs, updateDoc, doc, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, getDocs, updateDoc, doc, addDoc, serverTimestamp, getDoc, setDoc } from 'firebase/firestore';
 import DeliverWorkModal from './DeliverWorkModal';
+import TradeCompletionModal from './TradeCompletionModal';
 import { createPortal } from 'react-dom';
 import { Watermark, Modal } from 'antd';
 import { auth } from '../firebase/config';
@@ -26,10 +27,34 @@ function DeliverablesPanel({ tradeId, userId, partnerId }) {
   const [partnerAccepted, setPartnerAccepted] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isDeliverModalOpen, setDeliverModalOpen] = useState(false);
+  const [isCompletionModalOpen, setIsCompletionModalOpen] = useState(false);
+  const [tradeName, setTradeName] = useState('');
+  const [completionShown, setCompletionShown] = useState(false);
   const [modalImage, setModalImage] = useState(null);
   const [modalVideo, setModalVideo] = useState(null);
   const [modalIsPreview, setModalIsPreview] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
+
+  /**
+   * Fetches trade name and completion status for the completion modal.
+   * 
+   * @async
+   * @returns {Promise<void>}
+   */
+  const fetchTradeName = async () => {
+    try {
+      const tradeRef = doc(db, 'trades', tradeId);
+      const tradeSnap = await getDoc(tradeRef);
+      if (tradeSnap.exists()) {
+        const tradeData = tradeSnap.data();
+        setTradeName(tradeData.name || 'Trade');
+        setCompletionShown(tradeData.completionShown || false);
+      }
+    } catch (error) {
+      console.error('Error fetching trade name:', error);
+      setTradeName('Trade');
+    }
+  };
 
   /**
    * Fetches all deliverables from Firebase for both users in the trade.
@@ -48,19 +73,55 @@ function DeliverablesPanel({ tradeId, userId, partnerId }) {
     const myFinalArr = myFinalSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     const partnerPreviewArr = partnerPreviewSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     const partnerFinalArr = partnerFinalSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    
     setMyPreviewFiles(myPreviewArr);
     setMyFinalFiles(myFinalArr);
     setPartnerPreviewFiles(partnerPreviewArr);
     setPartnerFinalFiles(partnerFinalArr);
     setBothUploaded(myPreviewArr.length > 0 && partnerPreviewArr.length > 0);
-    setMyAccepted(myPreviewArr.some(f => f.accepted) || myFinalArr.some(f => f.accepted));
-    setPartnerAccepted(partnerPreviewArr.some(f => f.accepted) || partnerFinalArr.some(f => f.accepted));
+    
+    const myAcceptedStatus = myPreviewArr.some(f => f.accepted) || myFinalArr.some(f => f.accepted);
+    const partnerAcceptedStatus = partnerPreviewArr.some(f => f.accepted) || partnerFinalArr.some(f => f.accepted);
+    
+    setMyAccepted(myAcceptedStatus);
+    setPartnerAccepted(partnerAcceptedStatus);
+    
+    // Check completion status and trade name from trade document
+    try {
+      const tradeRef = doc(db, 'trades', tradeId);
+      const tradeSnap = await getDoc(tradeRef);
+      if (tradeSnap.exists()) {
+        const tradeData = tradeSnap.data();
+        if (!tradeName) {
+          setTradeName(tradeData.name || 'Trade');
+        }
+        setCompletionShown(tradeData.completionShown || false);
+      }
+    } catch (error) {
+      console.error('Error fetching trade completion status:', error);
+    }
+    
     setLoading(false);
   };
 
   useEffect(() => {
     fetchFiles();
+    fetchTradeName();
+    window.setIsCompletionModalOpen = setIsCompletionModalOpen;
   }, [tradeId, userId, partnerId, refreshKey]);
+
+  useEffect(() => {
+    const checkAndShowModal = async () => {
+      if (myAccepted && partnerAccepted && tradeId && userId) {
+        const voteRef = doc(db, `trades/${tradeId}/votes/${userId}`);
+        const voteSnap = await getDoc(voteRef);
+        if (!voteSnap.exists()) {
+          setIsCompletionModalOpen(true);
+        }
+      }
+    };
+    checkAndShowModal();
+  }, [myAccepted, partnerAccepted, tradeId, userId]);
 
   /**
    * Accepts the partner's work by marking all current user's deliverables as accepted.
@@ -307,6 +368,16 @@ function DeliverablesPanel({ tradeId, userId, partnerId }) {
           </div>
         )}
       </div>
+      
+      {/* Trade Completion Modal */}
+      <TradeCompletionModal
+        isOpen={isCompletionModalOpen}
+        onClose={() => setIsCompletionModalOpen(false)}
+        tradeId={tradeId}
+        partnerId={partnerId}
+        tradeName={tradeName}
+      />
+      
       {modalImage && createPortal(
         <div className="image-modal-overlay" onClick={() => {
           setModalImage(null);

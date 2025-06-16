@@ -207,6 +207,22 @@ function Profile() {
         }
     };
 
+    /**
+     * Determines the reputation badge based on ELO points.
+     * 
+     * @param {number} reputation - The user's reputation points
+     * @returns {string} The reputation badge text
+     */
+    const getReputationBadge = (reputation) => {
+        if (reputation >= 1200) return '🏆 Elite';
+        if (reputation >= 1100) return '⭐ Expert';
+        if (reputation >= 1050) return '🌟 Advanced';
+        if (reputation >= 1000) return '👍 Good';
+        if (reputation >= 950) return '📈 Rising';
+        if (reputation >= 900) return '🆕 New';
+        return '⚠️ Needs Improvement';
+    };
+
     if (loading) {
         return <div className="loading">Loading profile...</div>;
     }
@@ -337,6 +353,18 @@ function Profile() {
                         <div className="profile-info-card">
                             <h2>Specialisation</h2>
                             <p>{profile?.specialisation || 'Not specified'}</p>
+                        </div>
+                        <div className="profile-info-card reputation-card">
+                            <h2>Reputation</h2>
+                            <div className="reputation-display">
+                                <div className="reputation-score">
+                                    {profile?.reputation || 1000}
+                                </div>
+                                <div className="reputation-label">ELO Points</div>
+                                <div className="reputation-badge">
+                                    {getReputationBadge(profile?.reputation || 1000)}
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div className="profile-social-card">

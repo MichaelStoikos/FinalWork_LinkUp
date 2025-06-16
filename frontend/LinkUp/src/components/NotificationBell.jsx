@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect, useRef } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { auth, db } from '../firebase/config';
 import { collection, query, where, orderBy, onSnapshot, doc, updateDoc, getDocs, writeBatch, deleteDoc } from 'firebase/firestore';
 import { Bell } from 'lucide-react';
@@ -18,7 +18,9 @@ function NotificationBell() {
     const [unreadCount, setUnreadCount] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+    const dropdownRef = useRef(null);
     const navigate = useNavigate();
+    const location = useLocation();
 
     /**
      * Sets up real-time notification listener for the current user.
@@ -98,6 +100,32 @@ function NotificationBell() {
                 setIsLoading(false);
             });
     }, []);
+
+    /**
+     * Closes dropdown when navigating to different pages.
+     */
+    useEffect(() => {
+        setIsOpen(false);
+    }, [location.pathname]);
+
+    /**
+     * Handles clicks outside the dropdown to close it.
+     */
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setIsOpen(false);
+            }
+        };
+
+        if (isOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [isOpen]);
 
     /**
      * Marks all unread notifications as read when the dropdown is opened.
@@ -181,7 +209,7 @@ function NotificationBell() {
     });
 
     return (
-        <div className="notification-bell-container" data-testid="notification-bell">
+        <div className="notification-bell-container" data-testid="notification-bell" ref={dropdownRef}>
             <button 
                 className="notification-bell-button"
                 onClick={() => {

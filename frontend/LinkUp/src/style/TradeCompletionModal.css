@@ -1,0 +1,251 @@
+.trade-completion-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1100;
+  backdrop-filter: blur(4px);
+}
+
+.trade-completion-modal {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  width: 90%;
+  max-width: 80%;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  z-index: 1100;
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.modal-header {
+  background: linear-gradient(135deg, #7b61ff 0%, #5a43d6 100%);
+  color: white;
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  width: 100%;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-align: center;
+  flex: 1;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+  position: absolute;
+  right: 1rem;
+}
+
+.close-button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.modal-content {
+  padding: 2rem;
+}
+
+.completion-message {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.completion-message p {
+  margin: 0.5rem 0;
+  font-size: 1.1rem;
+  color: #333;
+  line-height: 1.5;
+}
+
+.completion-message strong {
+  color: #7b61ff;
+  font-weight: 600;
+}
+
+.rating-options {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.rating-option {
+  background: white;
+  border: 2px solid #e1e5e9;
+  border-radius: 12px;
+  padding: 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  text-align: left;
+  width: 100%;
+}
+
+.rating-option:hover {
+  border-color: #7b61ff;
+  box-shadow: 0 4px 12px rgba(123, 97, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+.rating-option.selected {
+  border-color: #7b61ff;
+  background: linear-gradient(135deg, #f8f7ff 0%, #f0edff 100%);
+  box-shadow: 0 4px 16px rgba(123, 97, 255, 0.2);
+}
+
+.rating-option:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.rating-emoji {
+  font-size: 2rem;
+  min-width: 40px;
+  text-align: center;
+}
+
+.rating-label {
+  flex: 1;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.rating-points {
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  background: #f0f0f0;
+  color: #666;
+  min-width: 60px;
+  text-align: center;
+}
+
+.rating-option.selected .rating-points {
+  background: #7b61ff;
+  color: white;
+}
+
+.submitting-message {
+  text-align: center;
+  padding: 1rem;
+  color: #666;
+  font-style: italic;
+}
+
+.success-message {
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.success-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  animation: successBounce 0.6s ease-out;
+}
+
+@keyframes successBounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+.success-message h3 {
+  color: #333;
+  font-size: 1.5rem;
+  margin: 0 0 0.5rem 0;
+  font-weight: 700;
+}
+
+.success-message p {
+  color: #666;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+  .trade-completion-modal {
+    width: 95%;
+    margin: 1rem;
+  }
+  
+  .modal-header {
+    padding: 1rem 1.5rem;
+  }
+  
+  .modal-header h2 {
+    font-size: 1.3rem;
+  }
+  
+  .modal-content {
+    padding: 1.5rem;
+  }
+  
+  .rating-option {
+    padding: 1rem;
+  }
+  
+  .rating-emoji {
+    font-size: 1.5rem;
+    min-width: 30px;
+  }
+  
+  .rating-label {
+    font-size: 1rem;
+  }
+  
+  .rating-points {
+    font-size: 0.8rem;
+    padding: 0.3rem 0.6rem;
+  }
+}

@@ -1,7 +1,7 @@
 .notification-bell-container {
     position: relative;
     margin-right: 1rem;
-    z-index: 1000;
+    z-index: 10;
 }
 
 .notification-bell-button {

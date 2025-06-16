@@ -52,7 +52,14 @@ function SpecializationPopup({ isOpen, onClose, specialization }) {
                 ...doc.data()
             }));
             
-            setUsers(usersData);
+            // Sort users by reputation from highest to lowest
+            const sortedUsers = usersData.sort((a, b) => {
+                const reputationA = a.reputation || 1000;
+                const reputationB = b.reputation || 1000;
+                return reputationB - reputationA; // Descending order (highest first)
+            });
+            
+            setUsers(sortedUsers);
         } catch (err) {
             console.error('Error fetching users:', err);
             setError('Failed to load users');
@@ -80,6 +87,22 @@ function SpecializationPopup({ isOpen, onClose, specialization }) {
         if (e.target === e.currentTarget) {
             onClose();
         }
+    };
+
+    /**
+     * Determines the reputation badge based on ELO points.
+     * 
+     * @param {number} reputation - The user's reputation points
+     * @returns {string} The reputation badge text
+     */
+    const getReputationBadge = (reputation) => {
+        if (reputation >= 1200) return '🏆 Elite';
+        if (reputation >= 1100) return '⭐ Expert';
+        if (reputation >= 1050) return '🌟 Advanced';
+        if (reputation >= 1000) return '👍 Good';
+        if (reputation >= 950) return '📈 Rising';
+        if (reputation >= 900) return '🆕 New';
+        return '⚠️ Needs Improvement';
     };
 
     if (!isOpen) return null;
@@ -147,7 +170,14 @@ function SpecializationPopup({ isOpen, onClose, specialization }) {
                                         </div>
                                     </div>
                                     <div className="user-card-right">
-                                        <p>Reputation</p>
+                                        <div className="user-reputation">
+                                            <div className="reputation-score-small">
+                                                {user.reputation || 1000}
+                                            </div>
+                                            <div className="reputation-badge-small">
+                                                {getReputationBadge(user.reputation || 1000)}
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             ))}
