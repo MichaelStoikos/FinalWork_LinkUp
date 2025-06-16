@@ -1,141 +1,165 @@
 .login-required-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(4px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(0, 0, 0, 0.5);
+	backdrop-filter: blur(4px);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	z-index: 1000;
 }
 
 div.login-required-content {
-    all: initial;
-    font-family: inherit;
-    background: #fff;
-    border-radius: 12px;
-    width: 450px;
-    height: 100px;
-    max-width: 90vw;
-    padding: 1.5rem;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.12);
-    text-align: center;
-    margin: 0 auto;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+	all: initial;
+	font-family: inherit;
+	background: #fff;
+	border-radius: 12px;
+	width: 450px;
+	height: 100px;
+	max-width: 90vw;
+	padding: 1.5rem;
+	box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
+	text-align: center;
+	margin: 0 auto;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
 
 .login-required-content h2 {
-    font-size: 1.1rem;
-    margin-bottom: 1rem;
-    color: #333;
-    font-family: inherit;
+	font-size: 1.1rem;
+	margin-bottom: 1rem;
+	color: #333;
+	font-family: inherit;
 }
 
 .login-required-content .login-link {
-    display: inline-block;
-    background: #7B68EE;
-    color: white;
-    padding: 0.6rem 1.2rem;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 0.9rem;
-    transition: all 0.3s ease;
-    border: none;
-    cursor: pointer;
-    font-family: inherit;
+	display: inline-block;
+	background: #7b68ee;
+	color: white;
+	padding: 0.6rem 1.2rem;
+	border-radius: 8px;
+	text-decoration: none;
+	font-weight: 600;
+	font-size: 0.9rem;
+	transition: all 0.3s ease;
+	border: none;
+	cursor: pointer;
+	font-family: inherit;
 }
 
 .login-required-content .login-link:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
+	transform: translateY(-2px);
+	box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
 }
 
 .close-button {
-    position: absolute;
-    top: 0.75rem;
-    right: 0.75rem;
-    background: none;
-    border: none;
-    color: #666;
-    cursor: pointer;
-    padding: 0.25rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    transition: all 0.2s ease;
+	position: absolute;
+	top: 0.75rem;
+	right: 0.75rem;
+	background: none;
+	border: none;
+	color: #666;
+	cursor: pointer;
+	padding: 0.25rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 50%;
+	transition: all 0.2s ease;
 }
 
 .close-button:hover {
-    background: rgba(0, 0, 0, 0.1);
-    transform: scale(1.1);
+	background: rgba(0, 0, 0, 0.1);
+	transform: scale(1.1);
 }
 
 @media (max-width: 500px) {
-    div.login-required-content {
-        width: 280px;
-        padding: 1rem;
-    }
+	div.login-required-content {
+		width: 280px;
+		padding: 1rem;
+	}
 }
 
 /* Tablet styles */
 @media (max-width: 1023px) {
-  div.login-required-content {
-    width: 95vw;
-    min-width: 0;
-    padding: 1.2rem 0.5rem 1rem 0.5rem;
-    border-radius: 12px;
-  }
+	div.login-required-content {
+		width: 95vw;
+		min-width: 0;
+		padding: 1.2rem 0.5rem 1rem 0.5rem;
+		border-radius: 12px;
+	}
 }
 
 /* Phone styles */
 @media (max-width: 600px) {
-  div.login-required-content {
-    width: 98vw;
-    min-width: 0;
-    max-width: 98vw;
-    padding: 1rem 0.2rem 0.7rem 0.2rem;
-    border-radius: 10px;
-  }
-  .login-required-content h2 {
-    font-size: 1rem;
-  }
-  .login-required-content .login-link {
-    font-size: 0.9rem;
-    padding: 0.5rem 1rem;
-  }
-  .close-button {
-    top: 0.5rem;
-    right: 0.5rem;
-    font-size: 1.2rem;
-    padding: 0.2rem;
-  }
+	div.login-required-content {
+		width: 98vw;
+		min-width: 0;
+		max-width: 98vw;
+		padding: 1rem 0.2rem 0.7rem 0.2rem;
+		border-radius: 10px;
+	}
+	.login-required-content h2 {
+		font-size: 1rem;
+	}
+	.login-required-content .login-link {
+		font-size: 0.9rem;
+		padding: 0.5rem 1rem;
+	}
+	.close-button {
+		top: 0.5rem;
+		right: 0.5rem;
+		font-size: 1.2rem;
+		padding: 0.2rem;
+	}
 }
 
 /* 15-inch laptops (1440px–1535px) */
 @media (min-width: 1440px) and (max-width: 1535px) {
-  div.login-required-content { width: 28rem; }
-  .login-required-content h2 { font-size: 1.2rem; }
-  .login-required-content .login-link { font-size: 1.1rem; height: 2.7rem; }
+	div.login-required-content {
+		width: 28rem;
+		height: 150px;
+	}
+	.login-required-content h2 {
+		font-size: 1.2rem;
+	}
+	.login-required-content .login-link {
+		font-size: 1.1rem;
+		height: 2.7rem;
+	}
 }
 
 /* 16-inch laptops (1536px–1599px) */
 @media (min-width: 1536px) and (max-width: 1599px) {
-  div.login-required-content { width: 32rem; }
-  .login-required-content h2 { font-size: 1.3rem; }
-  .login-required-content .login-link { font-size: 1.15rem; height: 2.8rem; }
+	div.login-required-content {
+		width: 32rem;
+		height: 150px;
+	}
+	.login-required-content h2 {
+		font-size: 1.3rem;
+	}
+	.login-required-content .login-link {
+		font-size: 1.15rem;
+		height: 2.8rem;
+	}
 }
 
 /* 17-inch laptops (1600px–1919px) */
 @media (min-width: 1600px) and (max-width: 1919px) {
-  div.login-required-content { width: 36rem; }
-  .login-required-content h2 { font-size: 1.4rem; }
-  .login-required-content .login-link { font-size: 1.2rem; height: 3rem; }
-} 
+	div.login-required-content {
+		width: 36rem;
+		height: 150px;
+	}
+	.login-required-content h2 {
+		font-size: 1.4rem;
+	}
+	.login-required-content .login-link {
+		font-size: 1.2rem;
+		height: 3rem;
+	}
+}

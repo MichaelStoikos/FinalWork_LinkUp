@@ -1,45 +1,48 @@
 .login-required-overlay {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(30, 20, 60, 0.45);
-  backdrop-filter: blur(6px);
-  z-index: 2000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(30, 20, 60, 0.45);
+	backdrop-filter: blur(6px);
+	z-index: 2000;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .login-required-content {
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(123, 97, 255, 0.15);
-  padding: 2.5rem 2.5rem 2rem 2.5rem;
-  min-width: 320px;
-  max-width: 90vw;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+	background: #fff;
+	border-radius: 16px;
+	box-shadow: 0 8px 32px rgba(123, 97, 255, 0.15);
+	padding: 2.5rem 2.5rem 2rem 2.5rem;
+	min-width: 320px;
+	max-width: 90vw;
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
 }
 
 .login-required-message {
-  color: #222;
-  font-size: 1.15rem;
-  margin-bottom: 1rem;
+	color: #222;
+	font-size: 1.15rem;
+	margin-bottom: 1rem;
 }
 
 .login-required-btn {
-  background: #7b61ff;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  padding: 0.75rem 2.5rem;
-  font-weight: 600;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background 0.2s;
+	background: #7b61ff;
+	color: #fff;
+	border: none;
+	border-radius: 8px;
+	padding: 0.75rem 2.5rem;
+	font-weight: 600;
+	font-size: 1rem;
+	cursor: pointer;
+	transition: background 0.2s;
 }
 
 .login-required-btn:hover {
-  background: #5a3ee6;
-} 
+	background: #5a3ee6;
+}
