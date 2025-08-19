@@ -65,7 +65,7 @@ function TradeDetails() {
             }
           }
         } else {
-          const response = await fetch(`https://finalworklinkup-production.up.railway.app/api/trades/${tradeId}`);
+          const response = await fetch(`https://finalworkbackend-production.up.railway.app/api/trades/${tradeId}`);
           if (!response.ok) {
             throw new Error('Trade not found');
           }

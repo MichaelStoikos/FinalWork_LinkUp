@@ -84,7 +84,7 @@ function Trades() {
   const fetchTrades = async () => {
     try {
       setLoading(true);
-      const response = await fetch('https://finalworklinkup-production.up.railway.app/api/trades');
+      const response = await fetch('https://finalworkbackend-production.up.railway.app/api/trades');
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.details || 'Failed to fetch trades');
