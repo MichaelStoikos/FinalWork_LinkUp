@@ -232,7 +232,7 @@ function DeliverWorkModal({ tradeId, userId, isOpen, onClose, onDelivery, partne
           <div className="deliver-sections-row">
             {/* Preview Deliverables Section */}
             <div className="deliver-section">
-              <h3>Preview Deliverables (Screenshots, Videos, etc.)</h3>
+              <h3>Preview Deliverables</h3>
               <div className="form-group">
                 <label>Upload Files (watermarked):</label>
                 <input type="file" multiple onChange={handlePreviewFileChange} disabled={uploading} />
@@ -257,7 +257,7 @@ function DeliverWorkModal({ tradeId, userId, isOpen, onClose, onDelivery, partne
             </div>
             {/* Final Deliverables Section */}
             <div className="deliver-section">
-              <h3>Final Deliverables (Repo, Website, etc.)</h3>
+              <h3>Final Deliverables</h3>
               <div className="form-group">
                 <label>Upload Files (final):</label>
                 <input type="file" multiple onChange={handleFinalFileChange} disabled={uploading} />
