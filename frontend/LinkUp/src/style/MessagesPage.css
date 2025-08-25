@@ -17,6 +17,7 @@
   left: 0px;
   object-fit: cover;
 }
+
 .messages-sidebar {
   background: white;
   border-radius: 18px;
@@ -24,8 +25,9 @@
   padding: 1.5rem 1rem;
   display: flex;
   flex-direction: column;
-  height: 94%;
+  height: 100%;
   margin-top: 2rem;
+  min-height: 0; /* Allow flex shrinking */
 }
 
 .messages-main {
@@ -38,8 +40,8 @@
   flex-direction: column;
   min-width: 0;
   height: 100%;
-  overflow: hidden;
-  margin-top: 2rem;
+  margin: 2rem 10px 0 0;
+  min-height: 0; /* Allow flex shrinking */
 }
 
 /* Add scrollbar styles matching ChatList */
@@ -49,6 +51,8 @@
   padding: 1rem;
   scrollbar-width: thin;
   scrollbar-color: #646cff #f0f0f0;
+  min-height: 0; /* Allow flex shrinking */
+  border-radius: 18px;
 }
 
 /* Custom scrollbar styles for Webkit browsers */

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { useParams, useNavigate } from 'react-router-dom';
 import { auth, db, storage } from '../firebase/config';
 import { 
@@ -15,8 +16,7 @@ import {
 } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import '../style/Messages.css';
-import DeliverWorkModal from '../components/DeliverWorkModal';
-import DeliverablesPanel from '../components/DeliverablesPanel';
+
 
 /**
  * Messages component for real-time chat functionality between collaboration partners.
@@ -37,8 +37,7 @@ function Messages() {
   const [uploadingFile, setUploadingFile] = useState(false);
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
-  const [isDeliverModalOpen, setDeliverModalOpen] = useState(false);
-  const [showSidePanel, setShowSidePanel] = useState(false);
+
 
   /**
    * Fetches chat details and sets up real-time message listener.
@@ -219,7 +218,7 @@ function Messages() {
 
   return (
     <div className="messages-container-flex">
-      <div className={`messages-main-panel${showSidePanel ? ' shrunk' : ''}`}> 
+      <div className="messages-main-panel"> 
         <div className="chat-header">
           
           {chatPartner && (
@@ -236,20 +235,15 @@ function Messages() {
               <span className="chat-partner-nickname">{chatPartner.nickname || 'User'}</span>
             </div>
           )}
-          <button
-            className="triple-dot-btn"
-            onClick={() => setShowSidePanel((v) => !v)}
-            title="Show deliverables panel"
+          <Link
+            to={`/deliverables/${chatId}`}
+            className="deliverables-btn"
+            title="View Deliverables"
           >
-            &#8942;
-          </button>
+            Deliverables
+          </Link>
         </div>
-        <DeliverWorkModal
-          tradeId={chatId}
-          userId={auth.currentUser?.uid}
-          isOpen={isDeliverModalOpen}
-          onClose={() => setDeliverModalOpen(false)}
-        />
+
         <div className="messages-list">
           {messages.map((message) => (
             <div 
@@ -305,18 +299,7 @@ function Messages() {
           </button>
         </form>
       </div>
-      {showSidePanel && (
-        <div className="messages-side-panel">
-          <button className="close-side-panel-btn" onClick={() => setShowSidePanel(false)}>
-            &times;
-          </button>
-          <DeliverablesPanel
-            tradeId={chatId}
-            userId={auth.currentUser?.uid}
-            partnerId={partnerId}
-          />
-        </div>
-      )}
+
     </div>
   );
 }

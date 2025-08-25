@@ -72,6 +72,11 @@ function Navigation() {
         };
     }, [isDropdownOpen]);
 
+    // Hide navigation on Deliverables page (after all hooks)
+    if (location.pathname.startsWith('/deliverables/')) {
+        return null;
+    }
+
     /**
      * Handles user sign out by calling Firebase Auth and navigating to home page.
      * 
@@ -94,12 +99,7 @@ function Navigation() {
         navigate('/profile');
     };
 
-    /**
-     * Navigates to the user's trades page.
-     */
-    const handleMyTradesClick = () => {
-        navigate('/my-trades');
-    };
+
 
     /**
      * Toggles the profile dropdown menu visibility.
@@ -116,6 +116,9 @@ function Navigation() {
             <div className="nav-links">
                 <Link to="/">Home</Link>
                 <Link to="/swaps" className="nav-link">Swaps</Link>
+                {user && (
+                  <Link to="/my-trades" className="nav-link">My Swaps</Link>
+                )}
                 {user && (
                   <Link to="/messages" className="nav-link">Messages</Link>
                 )}
@@ -138,7 +141,6 @@ function Navigation() {
                         {isDropdownOpen && (
                             <div className="profile-dropdown">
                                 <button onClick={handleProfileClick}>Account Details</button>
-                                <button onClick={handleMyTradesClick} >My Swaps</button>
                                 <button onClick={handleSignOut} >Sign Out</button>
                             </div>
                         )}

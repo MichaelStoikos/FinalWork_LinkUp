@@ -1,0 +1,8 @@
+.trade-header {
+  padding: 2.5rem 2rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #f0f0f0;
+  flex-direction: row-reverse;
+}

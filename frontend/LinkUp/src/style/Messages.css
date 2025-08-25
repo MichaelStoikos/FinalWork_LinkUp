@@ -2,9 +2,10 @@
 	width: 90%;
 	margin: 0 auto;
 	padding: 2rem;
-	height: calc(100vh - 4rem);
+	height: 100%;
 	display: flex;
 	flex-direction: column;
+	min-height: 0; /* Allow flex shrinking */
 }
 
 .chat-header {
@@ -45,6 +46,7 @@
 	gap: 1rem;
 	scrollbar-width: thin;
 	scrollbar-color: #646cff #f0f0f0;
+	min-height: 0; /* Allow flex shrinking */
 }
 
 .messages-list::-webkit-scrollbar {
@@ -131,6 +133,7 @@
 	border-radius: 8px;
 	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 	margin-top: 1rem;
+	flex-shrink: 0; /* Prevent input form from shrinking */
 }
 
 .message-input-form input[type="text"] {
@@ -139,6 +142,8 @@
 	border: 1px solid #ddd;
 	border-radius: 4px;
 	font-size: 1rem;
+	background: #f5f5f5;
+	color: #333;
 }
 
 .message-input-form input[type="text"]:focus {
@@ -206,6 +211,7 @@
 	width: 100%;
 	height: 100%;
 	position: relative;
+	min-height: 0; /* Allow flex shrinking */
 }
 
 .messages-main-panel {
@@ -214,80 +220,37 @@
 	padding: 2rem;
 	min-width: 0;
 	background: white;
+	border-radius: 18px;
 	display: flex;
 	flex-direction: column;
+	min-height: 0; /* Allow flex shrinking */
 }
 
-.messages-main-panel.shrunk {
-	flex: 0 0 65%;
-	max-width: 57%;
+
+
+.deliverables-btn {
+	background: #646CFF;
+	border: none;
+	color: white;
+	padding: 0.75rem 1.5rem;
+	border-radius: 25px;
+	cursor: pointer;
+	font-size: 0.9rem;
+	font-weight: 500;
+	text-decoration: none;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	transition: all 0.3s ease;
+	box-shadow: 0 4px 15px rgba(100, 108, 255, 0.3);
 }
 
-.messages-side-panel {
-	flex: 0 0 40%;
-	background: white;
-	border-left: 2px solid #7b61ff;
-	box-shadow: -2px 0 12px rgba(0, 0, 0, 0.08);
-	overflow-y: auto;
-	padding-left: 1rem;
-	padding-bottom: 1rem;
-	position: relative;
-	z-index: 10;
-	animation: slideInPanel 0.3s;
-	scrollbar-width: thin;
-	scrollbar-color: #646cff #f0f0f0;
-}
-
-.messages-side-panel::-webkit-scrollbar {
-	width: 8px;
-}
-
-.messages-side-panel::-webkit-scrollbar-track {
-	background: #f0f0f0;
-	border-radius: 4px;
-}
-
-.messages-side-panel::-webkit-scrollbar-thumb {
-	background: #646cff;
-	border-radius: 4px;
-}
-
-.messages-side-panel::-webkit-scrollbar-thumb:hover {
+.deliverables-btn:hover {
 	background: #535bf2;
+	transform: translateY(-2px);
+	box-shadow: 0 6px 20px rgba(100, 108, 255, 0.4);
+	color: white;
+	text-decoration: none;
 }
 
-@keyframes slideInPanel {
-	from {
-		transform: translateX(100%);
-		opacity: 0;
-	}
-	to {
-		transform: translateX(0);
-		opacity: 1;
-	}
-}
 
-.triple-dot-btn {
-	background: none;
-	border: none;
-	color: #b8c1ec;
-	font-size: 2rem;
-	cursor: pointer;
-	margin-right: 1rem;
-	transition: color 0.2s;
-}
-.triple-dot-btn:hover {
-	color: #7b61ff;
-}
-
-.close-side-panel-btn {
-	position: absolute;
-	top: 1rem;
-	right: 1rem;
-	background: none;
-	border: none;
-	color: #fff;
-	font-size: 2rem;
-	cursor: pointer;
-	z-index: 20;
-}

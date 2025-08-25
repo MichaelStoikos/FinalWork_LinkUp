@@ -37,6 +37,8 @@
   resize: vertical;
   min-height: 100px;
   margin-bottom: 1.5rem;
+  background-color: #f0f0f0;
+  color: #333;
 }
 
 .request-collab-actions {

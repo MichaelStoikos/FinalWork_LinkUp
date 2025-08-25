@@ -117,15 +117,18 @@ function DeliverWorkModal({ tradeId, userId, isOpen, onClose, onDelivery, partne
         const fileId = `${Date.now()}-${file.name}`;
         const storageRef = ref(storage, `deliverables/${tradeId}/${userId}/preview/${fileId}`);
         await uploadBytes(storageRef, file);
-        const fileUrl = await getDownloadURL(storageRef);
+        const downloadURL = await getDownloadURL(storageRef);
         await addDoc(
-          collection(db, `trades/${tradeId}/deliverables/${userId}/previewFiles`),
+          collection(db, 'deliverables'),
           {
-            fileUrl,
+            tradeId,
+            userId,
+            type: 'preview',
+            downloadURL,
             fileType: file.type,
             fileName: file.name,
             description: previewDesc,
-            uploadedAt: serverTimestamp(),
+            createdAt: serverTimestamp(),
             accepted: false,
           }
         );
@@ -135,15 +138,18 @@ function DeliverWorkModal({ tradeId, userId, isOpen, onClose, onDelivery, partne
         const fileId = `${Date.now()}-${file.name}`;
         const storageRef = ref(storage, `deliverables/${tradeId}/${userId}/final/${fileId}`);
         await uploadBytes(storageRef, file);
-        const fileUrl = await getDownloadURL(storageRef);
+        const downloadURL = await getDownloadURL(storageRef);
         await addDoc(
-          collection(db, `trades/${tradeId}/deliverables/${userId}/finalFiles`),
+          collection(db, 'deliverables'),
           {
-            fileUrl,
+            tradeId,
+            userId,
+            type: 'final',
+            downloadURL,
             fileType: file.type,
             fileName: file.name,
             description: finalDesc,
-            uploadedAt: serverTimestamp(),
+            createdAt: serverTimestamp(),
             accepted: false,
           }
         );
@@ -152,12 +158,16 @@ function DeliverWorkModal({ tradeId, userId, isOpen, onClose, onDelivery, partne
       for (const link of previewLinks) {
         if (link.url.trim()) {
           await addDoc(
-            collection(db, `trades/${tradeId}/deliverables/${userId}/previewFiles`),
+            collection(db, 'deliverables'),
             {
-              link: link.url,
+              tradeId,
+              userId,
+              type: 'preview',
+              downloadURL: link.url,
               description: link.description,
-              uploadedAt: serverTimestamp(),
+              createdAt: serverTimestamp(),
               accepted: false,
+              isLink: true,
             }
           );
         }
@@ -166,12 +176,16 @@ function DeliverWorkModal({ tradeId, userId, isOpen, onClose, onDelivery, partne
       for (const link of finalLinks) {
         if (link.url.trim()) {
           await addDoc(
-            collection(db, `trades/${tradeId}/deliverables/${userId}/finalFiles`),
+            collection(db, 'deliverables'),
             {
-              link: link.url,
+              tradeId,
+              userId,
+              type: 'final',
+              downloadURL: link.url,
               description: link.description,
-              uploadedAt: serverTimestamp(),
+              createdAt: serverTimestamp(),
               accepted: false,
+              isLink: true,
             }
           );
         }

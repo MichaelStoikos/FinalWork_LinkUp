@@ -177,18 +177,22 @@ function TradeDetails() {
         </button>
         <div className="trade-details-content">
           <div className="trade-header">
-            <h1>{trade.name}</h1>
             {trade.creatorNickname && (
-              <div className="trade-creator-info">
-                <span>Created by: </span>
-                <button 
-                  className="creator-link"
-                  onClick={handleCreatorClick}
-                >
-                  {trade.creatorNickname}
-                </button>
+              <div 
+                className="trade-creator-info"
+                onClick={handleCreatorClick}
+              >
+                {creatorProfile?.photoBase64 && (
+                  <img 
+                    src={creatorProfile.photoBase64} 
+                    alt={trade.creatorNickname} 
+                    className="creator-avatar-header"
+                  />
+                )}
+                <span className="creator-name-header">{trade.creatorNickname}</span>
               </div>
             )}
+            <h1>{trade.name}</h1>
           </div>
 
           {trade.image && (

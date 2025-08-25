@@ -7,6 +7,7 @@
   box-shadow: none;
   border-radius: 0;
   position: relative;
+  min-height: 0; /* Allow flex shrinking */
 }
 
 .chat-list-search {
@@ -24,6 +25,7 @@
   z-index: 10;
   color: black;
   margin-bottom: 3rem;
+  flex-shrink: 0; /* Prevent search bar from shrinking */
 }
 
 .chat-list-search:focus {
@@ -36,7 +38,8 @@
   gap: 0.5rem;
   overflow-y: auto;
   padding-right: 0.5rem;
-  height: calc(100% - 80px); /* Adjust based on search bar height + margin */
+  flex: 1; /* Take remaining space */
+  min-height: 0; /* Allow flex shrinking */
   scrollbar-width: thin;
   scrollbar-color: #646cff #f0f0f0;
 }
